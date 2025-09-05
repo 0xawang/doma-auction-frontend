@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { formatEther } from 'viem'
 
 export function useWeb3() {
-  const { address, isConnected } = useAccount()
+  const { address, chain, isConnected } = useAccount()
   const { connect, connectors } = useConnect()
   const { disconnect } = useDisconnect()
   const { data: balance } = useBalance({ address })
@@ -25,6 +25,7 @@ export function useWeb3() {
 
   return {
     address,
+    chain,
     isConnected: isClient && isConnected,
     balance: formattedBalance,
     connectWallet,

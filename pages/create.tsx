@@ -1,24 +1,36 @@
-import { useState } from 'react'
+
 import { Card, CardBody, CardHeader } from '@heroui/card'
-import { Button } from '@heroui/button'
-import { Input } from '@heroui/input'
-import { Textarea } from '@heroui/react'
-import { Switch } from '@heroui/switch'
-import { Slider } from '@heroui/slider'
-import { Chip } from '@heroui/chip'
+import { 
+  Input, 
+  Switch, 
+  Slider, 
+  Chip, 
+  Button, 
+  Image 
+} from '@heroui/react'
 import { motion } from 'framer-motion'
 import toast from 'react-hot-toast'
-import {Image} from "@heroui/react";
 import NextImage from "next/image";
 
 import { title } from '@/components/primitives'
 import DefaultLayout from '@/layouts/default'
 import { useAuction } from '@/hooks/useAuction'
 import { useWeb3 } from '@/hooks/useWeb3'
+import { TokenMetadata, useOwnershipToken } from '@/hooks/useOwnershipToken'
+import { useState, useEffect } from 'react'
+import { shortenAddress } from '@/utils/token'
+import { DOMA_CHAINID, CONTRACT_ADDRESSES } from '@/config/web3'
+import { useSwitchChain, useWriteContract, useReadContract } from 'wagmi'
 
 export default function CreateAuctionPage() {
-  const { isConnected, address } = useWeb3()
+  const { isConnected, address, chain } = useWeb3()
   const { createAuction, isPending, isSuccess } = useAuction()
+  const { balance, fetchOwnedTokens, ownedTokens, isLoading } = useOwnershipToken()
+  const { switchChain } = useSwitchChain()
+  const { writeContractAsync } = useWriteContract()
+  
+  const [isApproving, setIsApproving] = useState(false)
+  const [isApproved, setIsApproved] = useState(false)
 
   const [formData, setFormData] = useState({
     tokenIds: '',
@@ -33,6 +45,47 @@ export default function CreateAuctionPage() {
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [selectedTokens, setSelectedTokens] = useState<Set<TokenMetadata>>(new Set())
+  
+  const { data: isApprovedForAll } = useReadContract({
+    address: CONTRACT_ADDRESSES.OWNERSHIP_TOKEN as `0x${string}`,
+    abi: [{
+      inputs: [{ name: 'owner', type: 'address' }, { name: 'operator', type: 'address' }],
+      name: 'isApprovedForAll',
+      outputs: [{ name: '', type: 'bool' }],
+      stateMutability: 'view',
+      type: 'function'
+    }],
+    functionName: 'isApprovedForAll',
+    args: address ? [address, CONTRACT_ADDRESSES.HYBRID_DUTCH_AUCTION] : undefined,
+    query: { enabled: !!address }
+  })
+
+  const handleApprove = async () => {
+    if (!address) return
+    
+    setIsApproving(true)
+    try {
+      await writeContractAsync({
+        address: CONTRACT_ADDRESSES.OWNERSHIP_TOKEN as `0x${string}`,
+        abi: [{
+          inputs: [{ name: 'operator', type: 'address' }, { name: 'approved', type: 'bool' }],
+          name: 'setApprovalForAll',
+          outputs: [],
+          stateMutability: 'nonpayable',
+          type: 'function'
+        }],
+        functionName: 'setApprovalForAll',
+        args: [CONTRACT_ADDRESSES.HYBRID_DUTCH_AUCTION, true]
+      })
+      setIsApproved(true)
+      toast.success('Tokens approved successfully!')
+    } catch (error) {
+      toast.error('Failed to approve tokens')
+    } finally {
+      setIsApproving(false)
+    }
+  }
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
@@ -80,17 +133,22 @@ export default function CreateAuctionPage() {
     if (!validateForm()) return
 
     try {
-      const tokenIds = formData.tokenIds.split(',').map(id => parseInt(id.trim()))
+      const tokenIds = Array.from(selectedTokens).map(token => Number(token.tokenId))
       
-      await createAuction({
-        tokenIds,
-        startPrice: formData.startPrice,
-        reservePrice: formData.reservePrice,
-        priceDecrement: formData.priceDecrement,
-        duration: formData.duration,
-        rewardBudgetBps: formData.enableRewards ? formData.rewardBudgetBps : 0,
-        royaltyIncrement: formData.enableRoyalty ? formData.royaltyIncrement : 0
-      })
+      try {      
+        await createAuction({
+          tokenIds,
+          startPrice: formData.startPrice,
+          reservePrice: formData.reservePrice,
+          priceDecrement: formData.priceDecrement,
+          duration: formData.duration,
+          rewardBudgetBps: formData.enableRewards ? formData.rewardBudgetBps : 0,
+          royaltyIncrement: formData.enableRoyalty ? formData.royaltyIncrement : 0
+        })
+      } catch (error) {
+        console.error('Error creating auction:', error)
+        return
+      }
 
       toast.success('Auction created successfully!')
       
@@ -166,27 +224,87 @@ export default function CreateAuctionPage() {
                 </CardHeader>
                 <CardBody className="space-y-6">
                   <div>
-                    <Textarea
-                      label="Token IDs"
-                      placeholder="1, 2, 3, 4, 5..."
-                      description="Enter comma-separated token IDs for your domain NFTs"
-                      value={formData.tokenIds}
-                      onChange={(e) => setFormData({...formData, tokenIds: e.target.value})}
-                      isInvalid={!!errors.tokenIds}
-                      errorMessage={errors.tokenIds}
-                      minRows={2}
-                    />
-                    {tokenCount > 0 && (
-                      <Chip size="sm" color="primary" variant="flat" className="mt-2">
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <label className="text-sm font-medium">Select Your Tokens</label>
+                      </div>
+                      
+                      <div className="min-h-[120px] p-2">
+                        {ownedTokens.length === 0 ? (
+                          <div className="flex items-center justify-center h-full text-gray-500">
+                            {isLoading ? 'Loading tokens...' : 'There are no owned tokens'}
+                          </div>
+                        ) : (
+                          <div className="flex gap-4 overflow-x-auto p-4">
+                            {ownedTokens.map((token, idx) => {
+                              const isSelected = selectedTokens.has(token)
+                              return (
+                                <div
+                                  key={idx}
+                                  className={`flex-shrink-0 w-48 bg-gray-800 rounded-xl shadow-md cursor-pointer transition-all duration-200 ${
+                                    isSelected ? 'ring-2 ring-primary bg-gradient-to-br from-blue-500 to-purple-600' : 'shadow-gray-500'
+                                  }`}
+                                  onClick={() => {
+                                    const newSelected = new Set(selectedTokens)
+                                    if (isSelected) {
+                                      newSelected.delete(token)
+                                    } else {
+                                      newSelected.add(token)
+                                    }
+                                    setSelectedTokens(newSelected)
+                                    setFormData({...formData, tokenIds: Array.from(newSelected).map(t => t.tokenId).join(', ')})
+                                  }}
+                                >
+                                  <div className="p-4 flex flex-col items-center">
+                                    <div className="w-full h-32 mb-3 rounded-lg overflow-hidden flex items-center justify-center">
+                                      <Image 
+                                        alt="Token Image" 
+                                        src={token.image ?? '/images/domain.png'} 
+                                        width={120} 
+                                        height={120}
+                                        className="object-cover rounded-lg"
+                                      />
+                                    </div>
+                                    <div className="text-center">
+                                      <div className="text-sm font-semibold text-white mb-1 truncate w-full">
+                                        {token.name}
+                                      </div>
+                                      <div className="text-xs text-gray-200">
+                                        #{shortenAddress(token.tokenId.toString())}
+                                      </div>
+                                    </div>
+                                    {isSelected && (
+                                      <div className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
+                                        <span className="text-white text-xs">✓</span>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              )
+                            })}
+                          </div>
+                        )}
+                      </div>
+                      
+                      <p className="text-xs text-gray-500">
+                        Click tokens to select them for auction. <Chip size="sm" color="primary" variant="flat">
                         {tokenCount} token{tokenCount > 1 ? 's' : ''} selected
                       </Chip>
-                    )}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {Array.from(selectedTokens).map((token, idx) => (
+                          <Chip key={idx} size="sm" color="success" variant="flat" className="mr-2">
+                            {token.name}
+                          </Chip>
+                        ))}
+                      </p>
+                    </div>
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-6">
                     <Input
-                      label="Start Price (DOMA)"
-                      placeholder="1000"
+                      label="Start Price (ETH)"
+                      placeholder="1"
                       description="Initial auction price per token"
                       value={formData.startPrice}
                       onChange={(e) => setFormData({...formData, startPrice: e.target.value})}
@@ -195,8 +313,8 @@ export default function CreateAuctionPage() {
                     />
 
                     <Input
-                      label="Reserve Price (DOMA)"
-                      placeholder="700"
+                      label="Reserve Price (ETH)"
+                      placeholder="0.7"
                       description="Minimum price floor per token"
                       value={formData.reservePrice}
                       onChange={(e) => setFormData({...formData, reservePrice: e.target.value})}
@@ -207,8 +325,8 @@ export default function CreateAuctionPage() {
 
                   <div className="grid md:grid-cols-2 gap-6">
                     <Input
-                      label="Price Decrement (DOMA)"
-                      placeholder="1"
+                      label="Price Decrement (ETH)"
+                      placeholder="0.01"
                       description="Price reduction per block per token"
                       value={formData.priceDecrement}
                       onChange={(e) => setFormData({...formData, priceDecrement: e.target.value})}
@@ -218,19 +336,19 @@ export default function CreateAuctionPage() {
 
                     <div>
                       <label className="text-sm font-medium mb-2 block">
-                        Duration: {formData.duration} blocks
+                        Duration: {Math.floor(formData.duration / 60)}h {formData.duration % 60 ? `${formData.duration % 60}m` : ''}
                       </label>
                       <Slider
                         value={formData.duration}
                         onChange={(value) => setFormData({...formData, duration: Array.isArray(value) ? value[0] : value})}
                         minValue={10}
-                        maxValue={1000}
+                        maxValue={1440}
                         step={10}
                         className="mb-2"
                         aria-label="Auction duration in blocks"
                       />
                       <p className="text-xs text-gray-500">
-                        Approximately {Math.round(formData.duration * 12 / 60)} minutes
+                        Approximately {formData.duration} minutes
                       </p>
                     </div>
                   </div>
@@ -327,15 +445,15 @@ export default function CreateAuctionPage() {
                       </div>
                       <div className="flex justify-between">
                         <span>Start Price:</span>
-                        <span className="font-semibold">{formData.startPrice || '0'} DOMA</span>
+                        <span className="font-semibold">{formData.startPrice || '0'} ETH</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Reserve Price:</span>
-                        <span className="font-semibold">{formData.reservePrice || '0'} DOMA</span>
+                        <span className="font-semibold">{formData.reservePrice || '0'} ETH</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Estimated End Price:</span>
-                        <span className="font-semibold">{estimatedEndPrice} DOMA</span>
+                        <span className="font-semibold">{estimatedEndPrice} ETH</span>
                       </div>
                     </div>
                     
@@ -346,7 +464,7 @@ export default function CreateAuctionPage() {
                       </div>
                       <div className="flex justify-between">
                         <span>Price Decrement:</span>
-                        <span className="font-semibold">{formData.priceDecrement || '0'} DOMA/block</span>
+                        <span className="font-semibold">{formData.priceDecrement || '0'} ETH/block</span>
                       </div>
                       {formData.enableRewards && (
                         <div className="flex justify-between">
@@ -370,7 +488,7 @@ export default function CreateAuctionPage() {
                   {tokenCount > 0 && formData.startPrice && (
                     <div className="mt-4 p-4 bg-blue-50 rounded-lg">
                       <p className="text-sm text-blue-800">
-                        <strong>Total Bundle Value:</strong> {(parseFloat(formData.startPrice) * tokenCount).toFixed(2)} DOMA
+                        <strong>Total Bundle Value:</strong> {(parseFloat(formData.startPrice) * tokenCount).toFixed(2)} ETH
                       </p>
                     </div>
                   )}
@@ -379,16 +497,42 @@ export default function CreateAuctionPage() {
 
               {/* Submit */}
               <div className="flex gap-4">
-                <Button
-                  type="submit"
-                  color="primary"
-                  size="lg"
-                  className="flex-1"
-                  isLoading={isPending}
-                  isDisabled={tokenCount === 0}
-                >
-                  Create Auction
-                </Button>
+                {chain?.id === DOMA_CHAINID ? (
+                  !isApprovedForAll && !isApproved ? (
+                    <Button
+                      type="button"
+                      color="warning"
+                      size="lg"
+                      className="flex-1"
+                      isLoading={isApproving}
+                      isDisabled={selectedTokens.size === 0}
+                      onPress={handleApprove}
+                    >
+                      Approve Tokens
+                    </Button>
+                  ) : (
+                    <Button
+                      type="submit"
+                      color="primary"
+                      size="lg"
+                      className="flex-1"
+                      isLoading={isPending}
+                      isDisabled={selectedTokens.size === 0}
+                    >
+                      Create Auction
+                    </Button>
+                  )
+                ) : (
+                  <Button
+                    type="button"
+                    color="primary"
+                    size="lg"
+                    className="flex-1"
+                    onPress={() => switchChain({ chainId: DOMA_CHAINID })}
+                  >
+                    Switch to Doma Testnet
+                  </Button>
+                )}
                 
                 <Button
                   type="button"

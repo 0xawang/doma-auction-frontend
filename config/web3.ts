@@ -15,7 +15,7 @@ export const domaChain = {
     },
   },
   blockExplorers: {
-    default: { name: 'Explorer', url: 'https://rpc-testnet.doma.xyz' },
+    default: { name: 'Explorer', url: 'https://explorer-testnet.doma.xyz' },
   },
 }
 
@@ -31,8 +31,10 @@ export const config = createConfig({
   },
 })
 
+export const DOMA_CHAINID = 97476
+
 export const CONTRACT_ADDRESSES = {
-  HYBRID_DUTCH_AUCTION: '0x...',
-  LOYALTY_NFT: '0x...',
+  HYBRID_DUTCH_AUCTION: '0x560d354E9f690f9749594840120B4b5903c20E07',
+  LOYALTY_NFT: '0xA3A350214b699578bF9df1Eeb743ab7C139119d6',
   OWNERSHIP_TOKEN: '0x424bDf2E8a6F52Bd2c1C81D9437b0DC0309DF90f',
 }
