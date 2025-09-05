@@ -10,8 +10,10 @@ import { motion } from 'framer-motion'
 
 import { title } from '@/components/primitives'
 import DefaultLayout from '@/layouts/default'
-import { useAuctionData } from '@/hooks/useAuction'
+import { useAuctionCounter, useAuctionData, useAuctionsData } from '@/hooks/useAuctions'
 import { useWeb3 } from '@/hooks/useWeb3'
+import { linkToBlockExplorer, shortenAddress } from '@/utils/token'
+import { Image } from '@heroui/react'
 
 interface MockAuction {
   id: number
@@ -71,12 +73,13 @@ const mockAuctions: MockAuction[] = [
 
 export default function AuctionsPage() {
   const { isConnected } = useWeb3()
-  const { auctionCounter } = useAuctionData()
+  const { auctionCounter } = useAuctionCounter()
+  const { auctions } = useAuctionsData(auctionCounter)
   const [filter, setFilter] = useState('all')
   const [sortBy, setSortBy] = useState('timeLeft')
   const [searchTerm, setSearchTerm] = useState('')
 
-  const filteredAuctions = mockAuctions.filter(auction => {
+  const filteredAuctions = auctions.filter(auction => {
     if (filter === 'active' && !auction.active) return false
     if (filter === 'ending' && auction.timeLeft > '1h') return false
     if (searchTerm && !auction.seller.toLowerCase().includes(searchTerm.toLowerCase())) return false
@@ -154,11 +157,11 @@ export default function AuctionsPage() {
                         Auction #{auction.id}
                       </h3>
                       <p className="text-sm text-gray-500">
-                        {auction.tokenCount} Domain{auction.tokenCount > 1 ? 's' : ''}
+                        {auction.tokenIds.length} Domain{auction.tokenIds.length > 1 ? 's' : ''}
                       </p>
                     </div>
                     <div className="flex gap-1">
-                      {auction.hasReverseRoyalty && (
+                      {auction.royaltyIncrement != 0 && (
                         <Chip size="sm" color="secondary" variant="flat">
                           Royalty+
                         </Chip>
@@ -174,21 +177,31 @@ export default function AuctionsPage() {
 
                 <CardBody className="pt-0">
                   <div className="space-y-4">
+                    {/* Seller */}
+                    <div className="flex justify-between text-sm">
+                      <span>Seller:</span>
+                      <span className="font-mono">
+                        <Link isExternal showAnchorIcon href={linkToBlockExplorer(auction.seller)}>
+                          {shortenAddress(auction.seller)}
+                        </Link>
+                      </span>
+                    </div>
+
                     {/* Price Info */}
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span>Current Price:</span>
                         <span className="font-semibold text-blue-600">
-                          {auction.currentPrice} DOMA
+                          {auction.currentPrice} ETH
                         </span>
+                      </div>                      
+                      <div className="flex justify-between text-sm text-gray-500">
+                        <span>Started at:</span>
+                        <span>{auction.startPrice} ETH</span>
                       </div>
                       <div className="flex justify-between text-sm text-gray-500">
                         <span>Reserve:</span>
-                        <span>{auction.reservePrice} DOMA</span>
-                      </div>
-                      <div className="flex justify-between text-sm text-gray-500">
-                        <span>Started at:</span>
-                        <span>{auction.startPrice} DOMA</span>
+                        <span>{auction.reservePrice} ETH</span>
                       </div>
                     </div>
 
@@ -217,12 +230,6 @@ export default function AuctionsPage() {
                       >
                         {auction.timeLeft}
                       </Chip>
-                    </div>
-
-                    {/* Seller */}
-                    <div className="flex justify-between text-sm">
-                      <span>Seller:</span>
-                      <span className="font-mono">{auction.seller}</span>
                     </div>
 
                     {/* Rewards */}
@@ -256,6 +263,9 @@ export default function AuctionsPage() {
         {filteredAuctions.length === 0 && (
           <div className="text-center py-12">
             <h3 className="text-xl font-semibold mb-2">No auctions found</h3>
+            <div className="flex justify-center mb-4">
+              <Image width={200} height={150} src="/images/auction.png" alt="No auctions" />
+            </div>
             <p className="text-gray-600 mb-4">
               Try adjusting your filters or check back later for new auctions.
             </p>

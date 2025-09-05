@@ -1,27 +1,7 @@
-import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
-import { parseEther, formatEther } from 'viem'
+import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
+import { parseEther } from 'viem'
 import { CONTRACT_ADDRESSES } from '@/config/web3'
 import { AUCTION_ABI } from '@/contracts/abi'
-
-
-export interface Auction {
-  id: number
-  seller: string
-  tokenIds: number[]
-  startPrice: string
-  reservePrice: string
-  priceDecrement: string
-  startBlock: number
-  duration: number
-  active: boolean
-  cleared: boolean
-  rewardBudgetBps: number
-  royaltyIncrement: number
-  paymentToken: string
-  totalConverted: number
-  currentPrice?: string
-  currentRoyalty?: string
-}
 
 const AUCTION_CONTRACT_ADDRESS = CONTRACT_ADDRESSES.HYBRID_DUTCH_AUCTION as `0x${string}`
 
@@ -90,61 +70,5 @@ export function useAuction() {
     isConfirming,
     isSuccess,
     hash
-  }
-}
-
-export function useAuctionData(auctionId?: number) {
-  const { data: auctionCounter } = useReadContract({
-    address: AUCTION_CONTRACT_ADDRESS,
-    abi: AUCTION_ABI,
-    functionName: 'auctionCounter'
-  })
-
-  const { data: auctionData } = useReadContract({
-    address: AUCTION_CONTRACT_ADDRESS,
-    abi: AUCTION_ABI,
-    functionName: 'auctions',
-    args: [BigInt(auctionId!)],
-    query: { enabled: !!auctionId }
-  })
-
-  const { data: currentPrice } = useReadContract({
-    address: AUCTION_CONTRACT_ADDRESS,
-    abi: AUCTION_ABI,
-    functionName: 'getCurrentPrice',
-    args: [BigInt(auctionId!)],
-    query: { enabled: !!auctionId, refetchInterval: 5000 }
-  })
-
-  const { data: currentRoyalty } = useReadContract({
-    address: AUCTION_CONTRACT_ADDRESS,
-    abi: AUCTION_ABI,
-    functionName: 'getCurrentRoyalty',
-    args: [BigInt(auctionId!)],
-    query: { enabled: !!auctionId, refetchInterval: 5000 }
-  })
-
-  const auction: Auction | null = auctionData ? {
-    id: auctionId!,
-    seller: (auctionData as unknown as any[])[0] as string,
-    tokenIds: [], // Would need separate call to get token IDs
-    startPrice: formatEther((auctionData as unknown as any[])[1] as bigint),
-    reservePrice: formatEther((auctionData as unknown as any[])[2] as bigint),
-    priceDecrement: formatEther((auctionData as unknown as any[])[3] as bigint),
-    startBlock: Number((auctionData as unknown as any[])[4]),
-    duration: Number((auctionData as unknown as any[])[5]),
-    active: (auctionData as unknown as any[])[6] as boolean,
-    cleared: (auctionData as unknown as any[])[7] as boolean,
-    rewardBudgetBps: Number((auctionData as unknown as any[])[8]),
-    royaltyIncrement: Number((auctionData as unknown as any[])[9]),
-    paymentToken: (auctionData as unknown as any[])[10] as string,
-    totalConverted: Number((auctionData as unknown as any[])[11]),
-    currentPrice: currentPrice ? formatEther(currentPrice as bigint) : undefined,
-    currentRoyalty: currentRoyalty ? (Number(currentRoyalty) / 100).toString() : undefined
-  } : null
-
-  return {
-    auction,
-    auctionCounter: auctionCounter ? Number(auctionCounter) : 0
   }
 }

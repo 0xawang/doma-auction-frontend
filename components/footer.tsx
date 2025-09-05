@@ -51,7 +51,7 @@ export const Footer = () => {
         
         <div className="border-t border-divider mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-gray-500">
-            © 2024 DomaAuction. Built for Doma Hackathon.
+            © 2024 DomaAuction.
           </p>
           <div className="flex gap-6 mt-4 md:mt-0 text-sm text-gray-500">
             <span>Privacy Policy</span>

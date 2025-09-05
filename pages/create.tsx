@@ -6,7 +6,7 @@ import {
   Slider, 
   Chip, 
   Button, 
-  Image 
+  Image
 } from '@heroui/react'
 import { motion } from 'framer-motion'
 import toast from 'react-hot-toast'
@@ -18,9 +18,12 @@ import { useAuction } from '@/hooks/useAuction'
 import { useWeb3 } from '@/hooks/useWeb3'
 import { TokenMetadata, useOwnershipToken } from '@/hooks/useOwnershipToken'
 import { useState, useEffect } from 'react'
-import { shortenAddress } from '@/utils/token'
+import { linkToDomainOnBlockExplorer, shortenAddress } from '@/utils/token'
 import { DOMA_CHAINID, CONTRACT_ADDRESSES } from '@/config/web3'
 import { useSwitchChain, useWriteContract, useReadContract } from 'wagmi'
+import { ERC721_ABI } from '@/contracts/abi';
+
+const AUCTION_CONTACT_ADDRESS = CONTRACT_ADDRESSES.HYBRID_DUTCH_AUCTION as `0x${string}`
 
 export default function CreateAuctionPage() {
   const { isConnected, address, chain } = useWeb3()
@@ -49,15 +52,9 @@ export default function CreateAuctionPage() {
   
   const { data: isApprovedForAll } = useReadContract({
     address: CONTRACT_ADDRESSES.OWNERSHIP_TOKEN as `0x${string}`,
-    abi: [{
-      inputs: [{ name: 'owner', type: 'address' }, { name: 'operator', type: 'address' }],
-      name: 'isApprovedForAll',
-      outputs: [{ name: '', type: 'bool' }],
-      stateMutability: 'view',
-      type: 'function'
-    }],
+    abi: ERC721_ABI,
     functionName: 'isApprovedForAll',
-    args: address ? [address, CONTRACT_ADDRESSES.HYBRID_DUTCH_AUCTION] : undefined,
+    args: [address as `0x${string}`, AUCTION_CONTACT_ADDRESS],
     query: { enabled: !!address }
   })
 
@@ -76,7 +73,7 @@ export default function CreateAuctionPage() {
           type: 'function'
         }],
         functionName: 'setApprovalForAll',
-        args: [CONTRACT_ADDRESSES.HYBRID_DUTCH_AUCTION, true]
+        args: [AUCTION_CONTACT_ADDRESS, true]
       })
       setIsApproved(true)
       toast.success('Tokens approved successfully!')
@@ -133,7 +130,7 @@ export default function CreateAuctionPage() {
     if (!validateForm()) return
 
     try {
-      const tokenIds = Array.from(selectedTokens).map(token => Number(token.tokenId))
+      const tokenIds = Array.from(selectedTokens).map(token => BigInt(token.tokenId))
       
       try {      
         await createAuction({
@@ -180,7 +177,7 @@ export default function CreateAuctionPage() {
 
   return (
     <DefaultLayout>
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -293,9 +290,17 @@ export default function CreateAuctionPage() {
                       </p>
                       <p className="text-xs text-gray-500">
                         {Array.from(selectedTokens).map((token, idx) => (
-                          <Chip key={idx} size="sm" color="success" variant="flat" className="mr-2">
-                            {token.name}
-                          </Chip>
+                          <Chip 
+                          key={idx} 
+                          size="sm" 
+                          color="success" 
+                          variant="flat" 
+                          className="mr-2 cursor-pointer"
+                          onClick={() => window.open(linkToDomainOnBlockExplorer(token.tokenId.toString()), '_blank')}
+                          endContent={<span className="text-sm mr-1">↗</span>}
+                        >
+                          {token.name}
+                        </Chip>
                         ))}
                       </p>
                     </div>
@@ -460,7 +465,7 @@ export default function CreateAuctionPage() {
                     <div className="space-y-2">
                       <div className="flex justify-between">
                         <span>Duration:</span>
-                        <span className="font-semibold">{formData.duration} blocks</span>
+                        <span className="font-semibold">{formData.duration} mins</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Price Decrement:</span>
