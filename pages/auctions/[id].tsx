@@ -17,7 +17,7 @@ import { useAuction } from '@/hooks/useAuction'
 import { useAuctionData } from '@/hooks/useAuctions'
 import { useWeb3 } from '@/hooks/useWeb3'
 import { linkToBlockExplorer, shortenAddress } from '@/utils/token'
-import { Link } from '@heroui/react'
+import { Alert, Link } from '@heroui/react'
 
 export default function AuctionDetailPage() {
   const router = useRouter()
@@ -38,7 +38,7 @@ export default function AuctionDetailPage() {
   if (!auction) {
     return (
       <DefaultLayout>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center">
           <Button
             variant="light"
             onPress={() => router.back()}
@@ -46,7 +46,7 @@ export default function AuctionDetailPage() {
             ← Back
           </Button>
         </div>
-        <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto px-4 pb-8">
           <h1 className={title({class: 'gradient-metal'})}>Auction #{auctionId? auctionId + 1: 1}</h1>
           <p className='mt-4'>Loading auction details...</p>
           <div className='min-h-[360px]'></div>
@@ -90,7 +90,7 @@ export default function AuctionDetailPage() {
 
   return (
     <DefaultLayout>
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 pb-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -98,7 +98,7 @@ export default function AuctionDetailPage() {
         >
           {/* Header */}
           <div className="mb-8">
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-2">
               <Button
                 variant="light"
                 onPress={() => router.back()}
@@ -109,10 +109,10 @@ export default function AuctionDetailPage() {
             
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
               <div>
-                <h1 className={title({class: 'gradient-metal'})}>Auction #{auction.id}</h1>
-                <p className="text-gray-600 mt-2">
+                <h1 className={title({class: 'gradient-metal'})}>Auction #{auction.id + 1}</h1>
+                <p className="text-gray-300 mt-2">
                   {auction.tokenIds.length} 
-                  Domain NFTs • Seller: 
+                  {' '} Domain NFTs • Seller: {' '}
                   <Link isExternal showAnchorIcon color='success' href={linkToBlockExplorer(auction.seller)}>
                     {shortenAddress(auction.seller)}
                   </Link> 
@@ -385,19 +385,19 @@ export default function AuctionDetailPage() {
                 
                 <div>
                   <label className="text-sm font-medium mb-2 block">
-                    Desired Fraction: {softBidFraction}%
+                    Desired Count: {auction.tokenIds.length}
                   </label>
                   <Slider
                     value={softBidFraction}
                     onChange={(value) => setSoftBidFraction(Array.isArray(value) ? value[0] : value)}
-                    minValue={1}
-                    maxValue={100}
+                    minValue={0}
+                    maxValue={auction.tokenIds.length}
                     step={1}
                     className="mb-2"
                     aria-label="Desired fraction percentage for soft bid"
                   />
                   <p className="text-xs text-gray-500">
-                    {Math.floor((auction.tokenIds.length * softBidFraction) / 100)} tokens
+                    {auction.tokenIds.length} tokens
                   </p>
                 </div>
 
@@ -439,27 +439,24 @@ export default function AuctionDetailPage() {
             <ModalHeader>Place Hard Bid</ModalHeader>
             <ModalBody>
               <div className="space-y-4">
-                <div className="bg-blue-50 p-3 rounded-lg">
-                  <p className="text-sm text-blue-800">
-                    Current price: <strong>{auction.currentPrice} ETH per token</strong>
-                  </p>
-                </div>
+                <Alert color='primary' title={`Current price: ${parseFloat(auction.currentPrice).toFixed(8)} ETH per Domain`} />
+                
                 
                 <div>
                   <label className="text-sm font-medium mb-2 block">
-                    Desired Fraction: {hardBidFraction}%
+                    Desired Domains: {hardBidFraction}
                   </label>
                   <Slider
                     value={hardBidFraction}
                     onChange={(value) => setHardBidFraction(Array.isArray(value) ? value[0] : value)}
-                    minValue={1}
-                    maxValue={100}
+                    minValue={0}
+                    maxValue={auction.tokenIds.length}
                     step={1}
                     className="mb-2"
                     aria-label="Desired fraction percentage for hard bid"
                   />
                   <p className="text-xs text-gray-500">
-                    {Math.floor((auction.tokenIds.length * hardBidFraction) / 100)} tokens
+                    {hardBidFraction} tokens
                   </p>
                 </div>
 

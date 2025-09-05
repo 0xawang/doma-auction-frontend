@@ -25,7 +25,7 @@ export function useAuctionData(auctionId?: number) {
     address: AUCTION_CONTRACT_ADDRESS,
     abi: AUCTION_ABI,
     functionName: 'auctions',
-    args: auctionId ? [BigInt(auctionId)] : undefined,
+    args: auctionId !== undefined ? [BigInt(auctionId)] : undefined,
     query: { enabled: !!auctionId }
   })
 
@@ -33,7 +33,7 @@ export function useAuctionData(auctionId?: number) {
     address: AUCTION_CONTRACT_ADDRESS,
     abi: AUCTION_ABI,
     functionName: 'getAuctionTokenIds',
-    args: auctionId ? [BigInt(auctionId)] : undefined,
+    args: auctionId !== undefined ? [BigInt(auctionId)] : undefined,
     query: { enabled: !!auctionId }
   })
 
@@ -41,7 +41,7 @@ export function useAuctionData(auctionId?: number) {
     address: AUCTION_CONTRACT_ADDRESS,
     abi: AUCTION_ABI,
     functionName: 'getCurrentPrice',
-    args: auctionId ? [BigInt(auctionId)] : undefined,
+    args: auctionId !== undefined ? [BigInt(auctionId)] : undefined,
     query: { enabled: !!auctionId, refetchInterval: 5000 }
   })
 
@@ -49,7 +49,7 @@ export function useAuctionData(auctionId?: number) {
     address: AUCTION_CONTRACT_ADDRESS,
     abi: AUCTION_ABI,
     functionName: 'getCurrentRoyalty',
-    args: auctionId ? [BigInt(auctionId)] : undefined,
+    args: auctionId !== undefined ? [BigInt(auctionId)] : undefined,
     query: { enabled: !!auctionId, refetchInterval: 5000 }
   })
 
@@ -57,7 +57,7 @@ export function useAuctionData(auctionId?: number) {
     address: AUCTION_CONTRACT_ADDRESS,
     abi: AUCTION_ABI,
     functionName: 'getAuctionFilled',
-    args: auctionId ? [BigInt(auctionId)] : undefined,
+    args: auctionId !== undefined ? [BigInt(auctionId)] : undefined,
     query: { enabled: !!auctionId, refetchInterval: 5000 }
   })
 

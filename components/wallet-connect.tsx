@@ -3,6 +3,7 @@ import { Modal, ModalContent, ModalHeader, ModalBody, useDisclosure } from '@her
 import { useConnect, useDisconnect, useAccount, useBalance } from 'wagmi'
 import { useState, useEffect } from 'react'
 import { formatEther } from 'viem'
+import { shortenAddress } from '@/utils/token'
 
 export function WalletConnect() {
   const { address, isConnected } = useAccount()
@@ -25,12 +26,12 @@ export function WalletConnect() {
 
   if (isConnected && address) {
     return (
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-4">
         <div className="text-sm">
-          <div className="font-medium">{balance ? parseFloat(formatEther(balance.value)).toFixed(4) : '0'} DOMA</div>
-          <div className="text-gray-300">{address.slice(0, 6)}...{address.slice(-4)}</div>
+          <div className="font-medium">{balance ? parseFloat(formatEther(balance.value)).toFixed(4) : '0'} ETH</div>
+          <div className="text-success">{shortenAddress(address)}</div>
         </div>
-        <Button size="sm" variant="bordered" onPress={() => disconnect()}>
+        <Button size="md" variant="bordered" onPress={() => disconnect()}>
           Disconnect
         </Button>
       </div>
