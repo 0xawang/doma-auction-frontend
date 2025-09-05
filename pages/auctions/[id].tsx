@@ -13,13 +13,16 @@ import toast from 'react-hot-toast'
 
 import { title } from '@/components/primitives'
 import DefaultLayout from '@/layouts/default'
-import { useAuction, useAuctionData } from '@/hooks/useAuction'
+import { useAuction } from '@/hooks/useAuction'
+import { useAuctionData } from '@/hooks/useAuctions'
 import { useWeb3 } from '@/hooks/useWeb3'
+import { linkToBlockExplorer, shortenAddress } from '@/utils/token'
+import { Link } from '@heroui/react'
 
 export default function AuctionDetailPage() {
   const router = useRouter()
   const { id } = router.query
-  const auctionId = id ? parseInt(id as string) : undefined
+  const auctionId = id ? parseInt(id as string) - 1 : undefined
 
   const { isConnected, address } = useWeb3()
   const { auction } = useAuctionData(auctionId)
@@ -32,34 +35,33 @@ export default function AuctionDetailPage() {
   const [softBidFraction, setSoftBidFraction] = useState(10)
   const [hardBidFraction, setHardBidFraction] = useState(10)
 
-  // Mock data for demonstration
-  const mockAuction = {
-    id: auctionId || 1,
-    seller: '0x1234567890123456789012345678901234567890',
-    tokenIds: Array.from({length: 100}, (_, i) => i + 1),
-    startPrice: '1000',
-    currentPrice: '850',
-    reservePrice: '700',
-    priceDecrement: '1',
-    startBlock: 1000000,
-    duration: 300,
-    active: true,
-    cleared: false,
-    rewardBudgetBps: 100,
-    royaltyIncrement: 0,
-    paymentToken: '0x0000000000000000000000000000000000000000',
-    totalConverted: 65,
-    currentRoyalty: '0'
+  if (!auction) {
+    return (
+      <DefaultLayout>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="light"
+            onPress={() => router.back()}
+          >
+            ← Back
+          </Button>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <h1 className={title({class: 'gradient-metal'})}>Auction #{auctionId? auctionId + 1: 1}</h1>
+          <p className='mt-4'>Loading auction details...</p>
+          <div className='min-h-[360px]'></div>
+        </div>
+      </DefaultLayout>
+    )
   }
 
-  const currentAuction = auction || mockAuction
-  const fillPercentage = (currentAuction.totalConverted / currentAuction.tokenIds.length) * 100
+  const fillPercentage = (auction.totalConverted / auction.tokenIds.length) * 100
 
   const handleSoftBid = async () => {
     if (!softBidThreshold || !auctionId) return
     
     try {
-      const desiredCount = Math.floor((currentAuction.tokenIds.length * softBidFraction) / 100)
+      const desiredCount = Math.floor((auction.tokenIds.length * softBidFraction) / 100)
       await placeSoftBid(auctionId, softBidThreshold, desiredCount)
       toast.success('Soft bid placed successfully!')
       onSoftBidClose()
@@ -72,8 +74,8 @@ export default function AuctionDetailPage() {
     if (!auctionId) return
     
     try {
-      const desiredCount = Math.floor((currentAuction.tokenIds.length * hardBidFraction) / 100)
-      await placeHardBid(auctionId, desiredCount, currentAuction.currentPrice!)
+      const desiredCount = Math.floor((auction.tokenIds.length * hardBidFraction) / 100)
+      await placeHardBid(auctionId, desiredCount, auction.currentPrice!)
       toast.success('Hard bid placed successfully!')
       onHardBidClose()
     } catch (error) {
@@ -82,13 +84,13 @@ export default function AuctionDetailPage() {
   }
 
   const bondRequired = softBidThreshold ? 
-    (parseFloat(softBidThreshold) * (currentAuction.tokenIds.length * softBidFraction / 100) * 0.002).toFixed(4) : '0'
+    (parseFloat(softBidThreshold) * (auction.tokenIds.length * softBidFraction / 100) * 0.002).toFixed(4) : '0'
 
-  const hardBidCost = (parseFloat(currentAuction.currentPrice!) * (currentAuction.tokenIds.length * hardBidFraction / 100)).toFixed(2)
+  const hardBidCost = (parseFloat(auction.currentPrice!) * (auction.tokenIds.length * hardBidFraction / 100)).toFixed(8)
 
   return (
     <DefaultLayout>
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -107,25 +109,29 @@ export default function AuctionDetailPage() {
             
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
               <div>
-                <h1 className={title()}>Auction #{currentAuction.id}</h1>
+                <h1 className={title({class: 'gradient-metal'})}>Auction #{auction.id}</h1>
                 <p className="text-gray-600 mt-2">
-                  {currentAuction.tokenIds.length} Domain NFTs • Seller: {currentAuction.seller.slice(0, 10)}...
+                  {auction.tokenIds.length} 
+                  Domain NFTs • Seller: 
+                  <Link isExternal showAnchorIcon color='success' href={linkToBlockExplorer(auction.seller)}>
+                    {shortenAddress(auction.seller)}
+                  </Link> 
                 </p>
               </div>
               
               <div className="flex gap-2 mt-4 md:mt-0">
-                {currentAuction.rewardBudgetBps > 0 && (
+                {auction.rewardBudgetBps > 0 && (
                   <Chip color="success" variant="flat">
-                    {currentAuction.rewardBudgetBps / 100}% Rewards
+                    {auction.rewardBudgetBps / 100}% Rewards
                   </Chip>
                 )}
-                {currentAuction.royaltyIncrement > 0 && (
+                {auction.royaltyIncrement > 0 && (
                   <Chip color="secondary" variant="flat">
                     Reverse Royalty
                   </Chip>
                 )}
-                <Chip color={currentAuction.active ? "success" : "default"}>
-                  {currentAuction.active ? "Active" : "Ended"}
+                <Chip color={auction.active ? "success" : "default"}>
+                  {auction.active ? "Active" : "Ended"}
                 </Chip>
               </div>
             </div>
@@ -135,28 +141,31 @@ export default function AuctionDetailPage() {
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-6">
               {/* Price Chart */}
-              <Card>
+              <Card className='p-4'>
                 <CardHeader>
-                  <h3 className="text-xl font-semibold">Price Information</h3>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">💰</span>
+                    <h3 className="text-xl font-semibold">Price Information</h3>
+                  </div>
                 </CardHeader>
                 <CardBody>
                   <div className="grid md:grid-cols-3 gap-6">
                     <div className="text-center">
                       <p className="text-sm text-gray-500 mb-1">Current Price</p>
                       <p className="text-2xl font-bold text-blue-600">
-                        {currentAuction.currentPrice} DOMA
+                        {parseFloat(auction.currentPrice).toFixed(5)} ETH
                       </p>
                     </div>
                     <div className="text-center">
                       <p className="text-sm text-gray-500 mb-1">Started At</p>
                       <p className="text-xl font-semibold">
-                        {currentAuction.startPrice} DOMA
+                        {auction.startPrice} ETH
                       </p>
                     </div>
                     <div className="text-center">
                       <p className="text-sm text-gray-500 mb-1">Reserve Price</p>
                       <p className="text-xl font-semibold">
-                        {currentAuction.reservePrice} DOMA
+                        {auction.reservePrice} ETH
                       </p>
                     </div>
                   </div>
@@ -164,32 +173,37 @@ export default function AuctionDetailPage() {
                   <div className="mt-6">
                     <div className="flex justify-between text-sm mb-2">
                       <span>Price Decay</span>
-                      <span>{currentAuction.priceDecrement} DOMA per block</span>
+                      <span>{(parseFloat(auction.priceDecrement) * 30) .toFixed(6)} ETH per min</span>
                     </div>
                     <Progress 
-                      value={((parseFloat(currentAuction.startPrice) - parseFloat(currentAuction.currentPrice!)) / 
-                              (parseFloat(currentAuction.startPrice) - parseFloat(currentAuction.reservePrice))) * 100}
+                      value={((parseFloat(auction.startPrice) - parseFloat(auction.currentPrice!)) / 
+                              (parseFloat(auction.startPrice) - parseFloat(auction.reservePrice))) * 100}
                       color="warning"
+                      aria-label="Price decay progress"
                     />
                   </div>
                 </CardBody>
               </Card>
 
               {/* Auction Progress */}
-              <Card>
+              <Card className='p-4'>
                 <CardHeader>
-                  <h3 className="text-xl font-semibold">Auction Progress</h3>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">📊</span>
+                    <h3 className="text-xl font-semibold">Auction Progress</h3>
+                  </div>
                 </CardHeader>
                 <CardBody>
                   <div className="space-y-4">
                     <div>
                       <div className="flex justify-between text-sm mb-2">
                         <span>Tokens Sold</span>
-                        <span>{currentAuction.totalConverted} / {currentAuction.tokenIds.length}</span>
+                        <span>{auction.totalConverted} / {auction.tokenIds.length}</span>
                       </div>
                       <Progress 
                         value={fillPercentage}
                         color={fillPercentage > 80 ? "success" : fillPercentage > 50 ? "warning" : "primary"}
+                        aria-label={`Auction ${fillPercentage.toFixed(1)}% filled`}
                       />
                     </div>
                     
@@ -201,7 +215,7 @@ export default function AuctionDetailPage() {
                       <div className="flex justify-between">
                         <span>Remaining:</span>
                         <span className="font-semibold">
-                          {currentAuction.tokenIds.length - currentAuction.totalConverted} tokens
+                          {auction.tokenIds.length - auction.totalConverted} tokens
                         </span>
                       </div>
                     </div>
@@ -210,22 +224,32 @@ export default function AuctionDetailPage() {
               </Card>
 
               {/* Token Details */}
-              <Card>
+              <Card className='p-4'>
                 <CardHeader>
-                  <h3 className="text-xl font-semibold">Bundle Details</h3>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">📦</span>
+                    <h3 className="text-xl font-semibold">Bundle Details</h3>
+                  </div>
                 </CardHeader>
                 <CardBody>
-                  <Tabs>
+                  <Tabs key="bundle-details">
                     <Tab key="overview" title="Overview">
                       <div className="space-y-4">
                         <div className="grid md:grid-cols-2 gap-4 text-sm">
                           <div className="flex justify-between">
                             <span>Total Tokens:</span>
-                            <span className="font-semibold">{currentAuction.tokenIds.length}</span>
+                            <span className="font-semibold">{auction.tokenIds.length}</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Contract:</span>
-                            <span className="font-mono text-xs">0x424b...F90f</span>
+                            <Link 
+                              isExternal 
+                              showAnchorIcon 
+                              color='success' 
+                              className='font-mono'
+                              href={linkToBlockExplorer(auction.seller)}>
+                              {shortenAddress(auction.seller)}
+                            </Link> 
                           </div>
                           <div className="flex justify-between">
                             <span>Auction Type:</span>
@@ -233,7 +257,7 @@ export default function AuctionDetailPage() {
                           </div>
                           <div className="flex justify-between">
                             <span>Payment Token:</span>
-                            <span className="font-semibold">DOMA</span>
+                            <span className="font-semibold">ETH</span>
                           </div>
                         </div>
                       </div>
@@ -241,14 +265,14 @@ export default function AuctionDetailPage() {
                     <Tab key="tokens" title="Token IDs">
                       <div className="max-h-40 overflow-y-auto">
                         <div className="grid grid-cols-10 gap-1 text-xs">
-                          {currentAuction.tokenIds.slice(0, 50).map(tokenId => (
+                          {auction.tokenIds.slice(0, 50).map(tokenId => (
                             <span key={tokenId} className="p-1 bg-gray-100 rounded text-center">
                               #{tokenId}
                             </span>
                           ))}
-                          {currentAuction.tokenIds.length > 50 && (
+                          {auction.tokenIds.length > 50 && (
                             <span className="p-1 bg-gray-200 rounded text-center">
-                              +{currentAuction.tokenIds.length - 50}
+                              +{auction.tokenIds.length - 50}
                             </span>
                           )}
                         </div>
@@ -261,9 +285,12 @@ export default function AuctionDetailPage() {
 
             {/* Bidding Panel */}
             <div className="space-y-6">
-              <Card>
+              <Card className='p-4'>
                 <CardHeader>
-                  <h3 className="text-xl font-semibold">Place Bid</h3>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">🎯</span>
+                    <h3 className="text-xl font-semibold">Place Bid</h3>
+                  </div>
                 </CardHeader>
                 <CardBody>
                   {!isConnected ? (
@@ -280,17 +307,17 @@ export default function AuctionDetailPage() {
                         variant="solid"
                         className="w-full"
                         onPress={onSoftBidOpen}
-                        isDisabled={!currentAuction.active}
+                        isDisabled={!auction.active}
                       >
                         Place Soft Bid
                       </Button>
                       
                       <Button
-                        color="secondary"
+                        color="success"
                         variant="bordered"
                         className="w-full"
                         onPress={onHardBidOpen}
-                        isDisabled={!currentAuction.active}
+                        isDisabled={!auction.active}
                       >
                         Place Hard Bid
                       </Button>
@@ -306,29 +333,32 @@ export default function AuctionDetailPage() {
               </Card>
 
               {/* Auction Stats */}
-              <Card>
+              <Card className='bg-gradient-to-br from-blue-500 to-purple-600 p-4'>
                 <CardHeader>
-                  <h3 className="text-lg font-semibold">Statistics</h3>
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">📈</span>
+                    <h3 className="text-lg font-semibold">Statistics</h3>
+                  </div>
                 </CardHeader>
                 <CardBody>
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between">
                       <span>Start Block:</span>
-                      <span className="font-mono">{currentAuction.startBlock}</span>
+                      <span className="font-mono">{auction.startBlock}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Duration:</span>
-                      <span>{currentAuction.duration} blocks</span>
+                      <span>{auction.duration} blocks</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Current Royalty:</span>
-                      <span>{currentAuction.currentRoyalty}%</span>
+                      <span>{auction.currentRoyalty}%</span>
                     </div>
-                    {currentAuction.rewardBudgetBps > 0 && (
+                    {auction.rewardBudgetBps > 0 && (
                       <div className="flex justify-between">
                         <span>Reward Pool:</span>
                         <span className="text-green-600">
-                          {currentAuction.rewardBudgetBps / 100}%
+                          {auction.rewardBudgetBps / 100}%
                         </span>
                       </div>
                     )}
@@ -340,13 +370,13 @@ export default function AuctionDetailPage() {
         </motion.div>
 
         {/* Soft Bid Modal */}
-        <Modal isOpen={isSoftBidOpen} onClose={onSoftBidClose}>
+        <Modal backdrop='blur' isOpen={isSoftBidOpen} onClose={onSoftBidClose}>
           <ModalContent>
             <ModalHeader>Place Soft Bid</ModalHeader>
             <ModalBody>
               <div className="space-y-4">
                 <Input
-                  label="Price Threshold (DOMA)"
+                  label="Price Threshold (ETH)"
                   placeholder="Enter price per token"
                   value={softBidThreshold}
                   onChange={(e) => setSoftBidThreshold(e.target.value)}
@@ -360,28 +390,29 @@ export default function AuctionDetailPage() {
                   <Slider
                     value={softBidFraction}
                     onChange={(value) => setSoftBidFraction(Array.isArray(value) ? value[0] : value)}
-                    min={1}
-                    max={100}
+                    minValue={1}
+                    maxValue={100}
                     step={1}
                     className="mb-2"
+                    aria-label="Desired fraction percentage for soft bid"
                   />
                   <p className="text-xs text-gray-500">
-                    {Math.floor((currentAuction.tokenIds.length * softBidFraction) / 100)} tokens
+                    {Math.floor((auction.tokenIds.length * softBidFraction) / 100)} tokens
                   </p>
                 </div>
 
-                <div className="bg-gray-50 p-3 rounded-lg text-sm space-y-1">
+                <div className="border border-white/30 bg-default-100 p-3 rounded-lg text-sm space-y-1">
                   <div className="flex justify-between">
                     <span>Max Payment:</span>
                     <span className="font-semibold">
                       {softBidThreshold ? 
-                        (parseFloat(softBidThreshold) * (currentAuction.tokenIds.length * softBidFraction / 100)).toFixed(2) 
-                        : '0'} DOMA
+                        (parseFloat(softBidThreshold) * (auction.tokenIds.length * softBidFraction / 100)).toFixed(2) 
+                        : '0'} ETH
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Bond Required:</span>
-                    <span className="font-semibold">{bondRequired} DOMA</span>
+                    <span className="font-semibold">{bondRequired} ETH</span>
                   </div>
                 </div>
               </div>
@@ -403,14 +434,14 @@ export default function AuctionDetailPage() {
         </Modal>
 
         {/* Hard Bid Modal */}
-        <Modal isOpen={isHardBidOpen} onClose={onHardBidClose}>
+        <Modal backdrop='blur' isOpen={isHardBidOpen} onClose={onHardBidClose}>
           <ModalContent>
             <ModalHeader>Place Hard Bid</ModalHeader>
             <ModalBody>
               <div className="space-y-4">
                 <div className="bg-blue-50 p-3 rounded-lg">
                   <p className="text-sm text-blue-800">
-                    Current price: <strong>{currentAuction.currentPrice} DOMA per token</strong>
+                    Current price: <strong>{auction.currentPrice} ETH per token</strong>
                   </p>
                 </div>
                 
@@ -421,20 +452,21 @@ export default function AuctionDetailPage() {
                   <Slider
                     value={hardBidFraction}
                     onChange={(value) => setHardBidFraction(Array.isArray(value) ? value[0] : value)}
-                    min={1}
-                    max={100}
+                    minValue={1}
+                    maxValue={100}
                     step={1}
                     className="mb-2"
+                    aria-label="Desired fraction percentage for hard bid"
                   />
                   <p className="text-xs text-gray-500">
-                    {Math.floor((currentAuction.tokenIds.length * hardBidFraction) / 100)} tokens
+                    {Math.floor((auction.tokenIds.length * hardBidFraction) / 100)} tokens
                   </p>
                 </div>
 
-                <div className="bg-gray-50 p-3 rounded-lg text-sm space-y-1">
+                <div className="border border-white/30 bg-default-100 p-3 rounded-lg text-sm space-y-1">
                   <div className="flex justify-between">
                     <span>Total Cost:</span>
-                    <span className="font-semibold text-lg">{hardBidCost} DOMA</span>
+                    <span className="font-semibold text-lg">{hardBidCost} ETH</span>
                   </div>
                   <p className="text-xs text-gray-500">
                     Immediate purchase at current price

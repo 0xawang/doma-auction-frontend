@@ -10,66 +10,10 @@ import { motion } from 'framer-motion'
 
 import { title } from '@/components/primitives'
 import DefaultLayout from '@/layouts/default'
-import { useAuctionCounter, useAuctionData, useAuctionsData } from '@/hooks/useAuctions'
+import { useAuctionCounter, useAuctionsData } from '@/hooks/useAuctions'
 import { useWeb3 } from '@/hooks/useWeb3'
 import { linkToBlockExplorer, shortenAddress } from '@/utils/token'
 import { Image } from '@heroui/react'
-
-interface MockAuction {
-  id: number
-  seller: string
-  tokenCount: number
-  startPrice: string
-  currentPrice: string
-  reservePrice: string
-  timeLeft: string
-  filled: number
-  rewardBudgetBps: number
-  hasReverseRoyalty: boolean
-  active: boolean
-}
-
-const mockAuctions: MockAuction[] = [
-  {
-    id: 1,
-    seller: '0x1234...5678',
-    tokenCount: 100,
-    startPrice: '1000',
-    currentPrice: '850',
-    reservePrice: '700',
-    timeLeft: '2h 15m',
-    filled: 65,
-    rewardBudgetBps: 100,
-    hasReverseRoyalty: false,
-    active: true
-  },
-  {
-    id: 2,
-    seller: '0x9876...4321',
-    tokenCount: 25,
-    startPrice: '500',
-    currentPrice: '420',
-    reservePrice: '350',
-    timeLeft: '45m',
-    filled: 80,
-    rewardBudgetBps: 200,
-    hasReverseRoyalty: true,
-    active: true
-  },
-  {
-    id: 3,
-    seller: '0xabcd...efgh',
-    tokenCount: 1,
-    startPrice: '100',
-    currentPrice: '85',
-    reservePrice: '50',
-    timeLeft: '1h 30m',
-    filled: 0,
-    rewardBudgetBps: 150,
-    hasReverseRoyalty: false,
-    active: true
-  }
-]
 
 export default function AuctionsPage() {
   const { isConnected } = useWeb3()
@@ -152,13 +96,18 @@ export default function AuctionsPage() {
               <Card className="h-full hover:shadow-lg transition-shadow p-4">
                 <CardHeader className="pb-2">
                   <div className="flex justify-between items-start w-full">
-                    <div>
-                      <h3 className="text-lg font-semibold">
-                        Auction #{auction.id}
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        {auction.tokenIds.length} Domain{auction.tokenIds.length > 1 ? 's' : ''}
-                      </p>
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <span className="text-white text-lg">🏷️</span>
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold">
+                          Auction #{auction.id}
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          {auction.tokenIds.length} Domain{auction.tokenIds.length > 1 ? 's' : ''}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex gap-1">
                       {auction.royaltyIncrement != 0 && (

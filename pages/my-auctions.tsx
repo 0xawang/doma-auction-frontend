@@ -39,27 +39,27 @@ interface UserBid {
 const mockUserAuctions: UserAuction[] = [
   {
     id: 1,
-    tokenCount: 100,
-    startPrice: '1000',
-    currentPrice: '850',
-    reservePrice: '700',
+    tokenCount: 3,
+    startPrice: '0.1',
+    currentPrice: '0.082',
+    reservePrice: '0.07',
     timeLeft: '2h 15m',
     filled: 65,
     status: 'active',
-    totalBids: 12,
-    createdAt: '2024-01-15'
+    totalBids: 2,
+    createdAt: '2025-09-02'
   },
   {
     id: 4,
-    tokenCount: 50,
-    startPrice: '500',
-    currentPrice: '0',
-    reservePrice: '300',
+    tokenCount: 4,
+    startPrice: '0.1',
+    currentPrice: '0.0934',
+    reservePrice: '0.07',
     timeLeft: 'Ended',
-    filled: 100,
+    filled: 3,
     status: 'cleared',
-    totalBids: 8,
-    createdAt: '2024-01-10'
+    totalBids: 4,
+    createdAt: '2025-09-03'
   }
 ]
 
@@ -71,8 +71,8 @@ const mockUserBids: UserBid[] = [
     currentPrice: '450',
     fraction: 25,
     status: 'pending',
-    placedAt: '2024-01-16',
-    bondAmount: '2.1'
+    placedAt: '2025-09-03',
+    bondAmount: '0.03'
   },
   {
     auctionId: 3,
@@ -80,7 +80,7 @@ const mockUserBids: UserBid[] = [
     currentPrice: '85',
     fraction: 100,
     status: 'converted',
-    placedAt: '2024-01-14'
+    placedAt: '2025-09-04'
   },
   {
     auctionId: 5,
@@ -89,8 +89,8 @@ const mockUserBids: UserBid[] = [
     currentPrice: '180',
     fraction: 50,
     status: 'refunded',
-    placedAt: '2024-01-12',
-    bondAmount: '5.0'
+    placedAt: '2025-09-05',
+    bondAmount: '0.08'
   }
 ]
 
@@ -102,7 +102,7 @@ export default function MyAuctionsPage() {
     return (
       <DefaultLayout>
         <div className="max-w-4xl mx-auto px-4 py-8">
-          <Card>
+          <Card className='p-4'>
             <CardBody className="text-center py-12">
               <h3 className="text-xl font-semibold mb-4">Connect Your Wallet</h3>
               <p className="text-gray-600 mb-6">
@@ -127,7 +127,7 @@ export default function MyAuctionsPage() {
           transition={{ duration: 0.5 }}
         >
           <div className="mb-8">
-            <h1 className={title()}>My Auctions</h1>
+            <h1 className={title({className: 'gradient-metal'})}>My Auctions</h1>
             <p className="text-gray-600 mt-2">
               Manage your created auctions and track your bids
             </p>
@@ -141,7 +141,7 @@ export default function MyAuctionsPage() {
             <Tab key="created" title="Created Auctions">
               <div className="space-y-6">
                 {mockUserAuctions.length === 0 ? (
-                  <Card>
+                  <Card className='p-4'>
                     <CardBody className="text-center py-12">
                       <h3 className="text-lg font-semibold mb-2">No auctions created</h3>
                       <p className="text-gray-600 mb-4">
@@ -161,7 +161,7 @@ export default function MyAuctionsPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: index * 0.1 }}
                       >
-                        <Card className="h-full">
+                        <Card className="h-full p-4">
                           <CardHeader className="pb-2">
                             <div className="flex justify-between items-start w-full">
                               <div>
@@ -191,16 +191,16 @@ export default function MyAuctionsPage() {
                                 <div className="flex justify-between text-sm">
                                   <span>Current Price:</span>
                                   <span className="font-semibold">
-                                    {auction.status === 'cleared' ? 'Sold' : `${auction.currentPrice} DOMA`}
+                                    {auction.status === 'cleared' ? 'Sold' : `${auction.currentPrice} ETH`}
                                   </span>
                                 </div>
                                 <div className="flex justify-between text-sm text-gray-500">
                                   <span>Started at:</span>
-                                  <span>{auction.startPrice} DOMA</span>
+                                  <span>{auction.startPrice} ETH</span>
                                 </div>
                                 <div className="flex justify-between text-sm text-gray-500">
                                   <span>Reserve:</span>
-                                  <span>{auction.reservePrice} DOMA</span>
+                                  <span>{auction.reservePrice} ETH</span>
                                 </div>
                               </div>
 
@@ -211,6 +211,7 @@ export default function MyAuctionsPage() {
                                   <span>{auction.filled}%</span>
                                 </div>
                                 <Progress 
+                                  size='sm'
                                   value={auction.filled} 
                                   color={auction.filled === 100 ? "success" : auction.filled > 50 ? "warning" : "primary"}
                                 />
@@ -263,7 +264,7 @@ export default function MyAuctionsPage() {
             <Tab key="bids" title="My Bids">
               <div className="space-y-6">
                 {mockUserBids.length === 0 ? (
-                  <Card>
+                  <Card className='p-4'>
                     <CardBody className="text-center py-12">
                       <h3 className="text-lg font-semibold mb-2">No bids placed</h3>
                       <p className="text-gray-600 mb-4">
@@ -275,7 +276,7 @@ export default function MyAuctionsPage() {
                     </CardBody>
                   </Card>
                 ) : (
-                  <Card>
+                  <Card className='p-4'>
                     <CardHeader>
                       <h3 className="text-lg font-semibold">Bid History</h3>
                     </CardHeader>
@@ -310,8 +311,8 @@ export default function MyAuctionsPage() {
                               </TableCell>
                               <TableCell>
                                 {bid.type === 'soft' ? 
-                                  `${bid.threshold} DOMA` : 
-                                  `${bid.currentPrice} DOMA`
+                                  `${bid.threshold} ETH` : 
+                                  `${bid.currentPrice} ETH`
                                 }
                               </TableCell>
                               <TableCell>{bid.fraction}%</TableCell>
@@ -328,7 +329,7 @@ export default function MyAuctionsPage() {
                                 </Chip>
                               </TableCell>
                               <TableCell>
-                                {bid.bondAmount ? `${bid.bondAmount} DOMA` : '-'}
+                                {bid.bondAmount ? `${bid.bondAmount} ETH` : '-'}
                               </TableCell>
                               <TableCell>{bid.placedAt}</TableCell>
                               <TableCell>
@@ -364,7 +365,7 @@ export default function MyAuctionsPage() {
 
             <Tab key="rewards" title="Rewards">
               <div className="space-y-6">
-                <Card>
+                <Card className='p-4'>
                   <CardHeader>
                     <h3 className="text-lg font-semibold">Loyalty Rewards</h3>
                   </CardHeader>
@@ -375,7 +376,7 @@ export default function MyAuctionsPage() {
                         <p className="text-sm text-gray-600">Total Points Earned</p>
                       </div>
                       <div>
-                        <p className="text-2xl font-bold text-green-600">45.2 DOMA</p>
+                        <p className="text-2xl font-bold text-green-600">45.2 ETH</p>
                         <p className="text-sm text-gray-600">Total Rewards Claimed</p>
                       </div>
                       <div>
@@ -384,16 +385,16 @@ export default function MyAuctionsPage() {
                       </div>
                     </div>
 
-                    <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
+                    <div className="mt-6 p-4 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg">
                       <h4 className="font-semibold mb-2">Loyalty NFT Status</h4>
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm text-gray-600">Current Tier: <strong>Silver Bidder</strong></p>
-                          <p className="text-xs text-gray-500">Next tier at 2,000 points</p>
+                          <p className="text-sm text-gray-200">Current Tier: <strong>Silver Bidder</strong></p>
+                          <p className="text-xs text-gray-300">Next tier at 2,000 points</p>
                         </div>
                         <Progress 
                           value={(1250 / 2000) * 100} 
-                          color="secondary"
+                          color="warning"
                           className="w-32"
                         />
                       </div>
@@ -401,31 +402,31 @@ export default function MyAuctionsPage() {
                   </CardBody>
                 </Card>
 
-                <Card>
+                <Card className='p-4'>
                   <CardHeader>
                     <h3 className="text-lg font-semibold">Recent Rewards</h3>
                   </CardHeader>
                   <CardBody>
                     <div className="space-y-3">
-                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                      <div className="flex justify-between items-center p-3 border border-white/30 rounded-lg p-4">
                         <div>
                           <p className="font-semibold">Auction #3 Reward</p>
-                          <p className="text-sm text-gray-600">Early bidder bonus</p>
+                          <p className="text-sm text-gray-300">Early bidder bonus</p>
                         </div>
                         <div className="text-right">
-                          <p className="font-semibold text-green-600">+12.5 DOMA</p>
-                          <p className="text-xs text-gray-500">+150 points</p>
+                          <p className="font-semibold text-green-600">+0.0125 ETH</p>
+                          <p className="text-xs text-gray-300">+150 points</p>
                         </div>
                       </div>
                       
-                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                      <div className="flex justify-between items-center p-3 border border-white/30 rounded-lg p-4">
                         <div>
                           <p className="font-semibold">Auction #1 Reward</p>
-                          <p className="text-sm text-gray-600">Participation reward</p>
+                          <p className="text-sm text-gray-300">Participation reward</p>
                         </div>
                         <div className="text-right">
-                          <p className="font-semibold text-green-600">+8.3 DOMA</p>
-                          <p className="text-xs text-gray-500">+100 points</p>
+                          <p className="font-semibold text-green-600">+0.0083 ETH</p>
+                          <p className="text-xs text-gray-300">+100 points</p>
                         </div>
                       </div>
                     </div>
