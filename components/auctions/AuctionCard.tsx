@@ -17,12 +17,12 @@ interface AuctionCardProps {
 
 export function AuctionCard({ auction, index }: AuctionCardProps) {
   const { isConnected, chain } = useWeb3();
-  const { switchChain } = useSwitchChain();
+  const { switchChainAsync } = useSwitchChain();
   const router = useRouter();
 
   const handleViewAuction = async () => {
     if (chain?.id !== DOMA_CHAINID) {
-      await switchChain({ chainId: DOMA_CHAINID });
+      await switchChainAsync({ chainId: DOMA_CHAINID });
     }
     router.push(`/auctions/${auction.id}`);
   };
