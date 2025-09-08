@@ -4,6 +4,7 @@ import { CONTRACT_ADDRESSES } from '@/config/web3'
 import { AUCTION_ABI } from '@/contracts/abi'
 import { Auction } from '@/types/auction'
 import { timeLeft } from '@/utils/token'
+import { useQueries, useQuery } from '@tanstack/react-query'
 
 const AUCTION_CONTRACT_ADDRESS = CONTRACT_ADDRESSES.HYBRID_DUTCH_AUCTION as `0x${string}`
 
@@ -66,7 +67,7 @@ export function useAuctionData(auctionId?: number) {
   const auction: Auction | null = auctionData ? {
     id: auctionId!,
     seller: (auctionData)[0] as string,
-    tokenIds: Array.isArray(tokenIds) ? tokenIds.map(tid => Number(tid)) : [], // Would need separate call to get token IDs
+    tokenIds: Array.isArray(tokenIds) ? tokenIds.map(tid => tid.toString()) : [], 
     startPrice: formatEther((auctionData)[1] as bigint),
     reservePrice: formatEther((auctionData)[2] as bigint),
     priceDecrement: formatEther((auctionData)[3] as bigint),
@@ -159,7 +160,7 @@ export function useAuctionsData(auctionCount: number) {
     }
   })
 
-  const auctions: Auction[] = top15Ids.map((id, index) => {
+  const auctions = top15Ids.map((id, index) => {
     const auctionResult = auctionsData?.[index]
     const tokensResult = auctionsTokensData?.[index]
     const priceResult = auctionsPriceData?.[index]
@@ -177,7 +178,7 @@ export function useAuctionsData(auctionCount: number) {
     return {
       id,
       seller: data[0] as string,
-      tokenIds: Array.isArray(tokenIds) ? tokenIds.map(tid => Number(tid)) : [],
+      tokenIds: Array.isArray(tokenIds) ? tokenIds.map(tid => tid.toString()) : [],
       startPrice: formatEther(data[1] as bigint),
       reservePrice: formatEther(data[2] as bigint),
       priceDecrement: formatEther(data[3] as bigint),
@@ -196,9 +197,44 @@ export function useAuctionsData(auctionCount: number) {
       currentRoyalty,
       filled
     }
-  }).filter((auction): auction is Auction => auction !== null)
+  }).filter((auction): auction is Auction => auction !== null) as Auction[]
 
   return {
     auctions
+  }
+}
+
+export function useDomainMetadata(tokenIds: string[] | undefined) {
+  const domainQueries = useQuery({
+      queryKey: ['domainInfo', tokenIds?.join(',')],
+      queryFn: async () => {
+        try {
+          const mainUrl = `/api/domain-info`
+          const response = await fetch(mainUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              tokenIds: tokenIds || []
+            })
+          })
+
+          if (response.ok) {
+            const {domainInfos} = await response.json()
+
+            return domainInfos;
+          }
+        } catch (error) {
+          console.error('Error fetching domain metadata:', error)
+        }
+        
+        return []
+      },
+      enabled: !!tokenIds && tokenIds.length > 0,
+    })  
+
+  return {
+    domainInfos: domainQueries?.data,
   }
 }

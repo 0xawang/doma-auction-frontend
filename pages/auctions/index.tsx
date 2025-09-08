@@ -14,6 +14,7 @@ import { useAuctionCounter, useAuctionsData } from '@/hooks/useAuctions'
 import { useWeb3 } from '@/hooks/useWeb3'
 import { linkToBlockExplorer, shortenAddress } from '@/utils/token'
 import { Image } from '@heroui/react'
+import { AuctionCard } from '@/components/auctions/AuctionCard'
 
 export default function AuctionsPage() {
   const { isConnected } = useWeb3()
@@ -87,125 +88,7 @@ export default function AuctionsPage() {
         {/* Auctions Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredAuctions.map((auction, index) => (
-            <motion.div
-              key={auction.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <Card className="h-full hover:shadow-lg transition-shadow p-4">
-                <CardHeader className="pb-2">
-                  <div className="flex justify-between items-start w-full">
-                    <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                        <span className="text-white text-lg">🏷️</span>
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-semibold">
-                          Auction #{auction.id}
-                        </h3>
-                        <p className="text-sm text-gray-500">
-                          {auction.tokenIds.length} Domain{auction.tokenIds.length > 1 ? 's' : ''}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex gap-1">
-                      {auction.royaltyIncrement != 0 && (
-                        <Chip size="sm" color="secondary" variant="flat">
-                          Royalty+
-                        </Chip>
-                      )}
-                      {auction.rewardBudgetBps > 0 && (
-                        <Chip size="sm" color="success" variant="flat">
-                          Rewards
-                        </Chip>
-                      )}
-                    </div>
-                  </div>
-                </CardHeader>
-
-                <CardBody className="pt-0">
-                  <div className="space-y-4">
-                    {/* Seller */}
-                    <div className="flex justify-between text-sm">
-                      <span>Seller:</span>
-                      <span className="font-mono">
-                        <Link isExternal showAnchorIcon href={linkToBlockExplorer(auction.seller)}>
-                          {shortenAddress(auction.seller)}
-                        </Link>
-                      </span>
-                    </div>
-
-                    {/* Price Info */}
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span>Current Price:</span>
-                        <span className="font-semibold text-blue-600">
-                          {auction.currentPrice} ETH
-                        </span>
-                      </div>                      
-                      <div className="flex justify-between text-sm text-gray-500">
-                        <span>Started at:</span>
-                        <span>{auction.startPrice} ETH</span>
-                      </div>
-                      <div className="flex justify-between text-sm text-gray-500">
-                        <span>Reserve:</span>
-                        <span>{auction.reservePrice} ETH</span>
-                      </div>
-                    </div>
-
-                    {/* Progress */}
-                    <div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span>Filled:</span>
-                        <span>{auction.filled}%</span>
-                      </div>
-                      <Progress 
-                        size="sm"
-                        value={auction.filled} 
-                        color={auction.filled > 80 ? "success" : auction.filled > 50 ? "warning" : "primary"}
-                        className="mb-2"
-                        aria-label={`Auction ${auction.filled}% filled`}
-                      />
-                    </div>
-
-                    {/* Time Left */}
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-500">Time left:</span>
-                      <Chip 
-                        size="sm" 
-                        color={auction.timeLeft < '1h' ? "danger" : "primary"}
-                        variant="flat"
-                      >
-                        {auction.timeLeft}
-                      </Chip>
-                    </div>
-
-                    {/* Rewards */}
-                    {auction.rewardBudgetBps > 0 && (
-                      <div className="flex justify-between text-sm">
-                        <span>Reward Pool:</span>
-                        <span className="text-green-600">
-                          {auction.rewardBudgetBps / 100}% of sale
-                        </span>
-                      </div>
-                    )}
-
-                    {/* Action Button */}
-                    <Button
-                      as={Link}
-                      href={`/auctions/${auction.id}`}
-                      color="primary"
-                      variant={isConnected ? "solid" : "bordered"}
-                      className="w-full mt-4"
-                      isDisabled={!isConnected}
-                    >
-                      {isConnected ? 'View & Bid' : 'Connect Wallet to Bid'}
-                    </Button>
-                  </div>
-                </CardBody>
-              </Card>
-            </motion.div>
+            <AuctionCard key={auction.id} auction={auction} index={index} />
           ))}
         </div>
 

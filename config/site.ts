@@ -16,6 +16,10 @@ export const siteConfig = {
       label: "My Auctions",
       href: "/my-auctions",
     },
+    {
+      label: "Docs",
+      href: "/docs",
+    },
   ],
   navMenuItems: [
     {
@@ -29,6 +33,10 @@ export const siteConfig = {
     {
       label: "My Auctions",
       href: "/my-auctions",
+    },
+    {
+      label: "Docs",
+      href: "/docs",
     },
   ],
   links: {

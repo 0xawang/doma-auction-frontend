@@ -230,15 +230,15 @@ export default function IndexPage() {
                   </div>
                   <div className="flex justify-between">
                     <span>Start Price:</span>
-                    <span>1,000 DOMA</span>
+                    <span>100 USDC</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Current Price:</span>
-                    <span className="text-yellow-300">850 DOMA ↓</span>
+                    <span className="text-yellow-300">85 USDC ↓</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Reserve:</span>
-                    <span>700 DOMA</span>
+                    <span>70 USDC</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Filled:</span>

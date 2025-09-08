@@ -42,7 +42,7 @@ export const Footer = () => {
           <div>
             <h3 className="font-semibold mb-4">Resources</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link isExternal href={siteConfig.links.docs} className="text-gray-400 hover:text-gray-900">Documentation</Link></li>
+              <li><Link href="/docs" className="text-gray-400 hover:text-gray-900">Documentation</Link></li>
               <li><Link isExternal href={siteConfig.links.github} className="text-gray-400 hover:text-gray-900">GitHub</Link></li>
               <li><span className="text-gray-400">Support</span></li>
             </ul>

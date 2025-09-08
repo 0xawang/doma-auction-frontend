@@ -1,7 +1,7 @@
 export interface Auction {
   id: number
   seller: string
-  tokenIds: number[]
+  tokenIds: string[],
   startPrice: string
   reservePrice: string
   priceDecrement: string
@@ -19,4 +19,9 @@ export interface Auction {
   currentRoyalty: number
   timeLeft: string
   filled: number
+}
+
+export interface DomainInfo {
+  name: string,
+  image?: string
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/router'
 import { Card, CardBody, CardHeader } from '@heroui/card'
 import { Button } from '@heroui/button'
@@ -14,10 +14,13 @@ import toast from 'react-hot-toast'
 import { title } from '@/components/primitives'
 import DefaultLayout from '@/layouts/default'
 import { useAuction } from '@/hooks/useAuction'
-import { useAuctionData } from '@/hooks/useAuctions'
+import { useAuctionData, useDomainMetadata } from '@/hooks/useAuctions'
 import { useWeb3 } from '@/hooks/useWeb3'
 import { linkToBlockExplorer, shortenAddress } from '@/utils/token'
-import { Alert, Link } from '@heroui/react'
+import { Alert, Image, Link } from '@heroui/react'
+import { PriceCard } from '@/components/auctions/PriceCard'
+import { BiddingPanel } from '@/components/auctions/BiddingPanel'
+import { CONTRACT_ADDRESSES } from '@/config/web3'
 
 export default function AuctionDetailPage() {
   const router = useRouter()
@@ -26,6 +29,7 @@ export default function AuctionDetailPage() {
 
   const { isConnected, address } = useWeb3()
   const { auction } = useAuctionData(auctionId)
+  const { domainInfos} = useDomainMetadata(auction?.tokenIds)
   const { placeSoftBid, placeHardBid, isPending, isSuccess } = useAuction()
   
   const { isOpen: isSoftBidOpen, onOpen: onSoftBidOpen, onClose: onSoftBidClose } = useDisclosure()
@@ -264,18 +268,32 @@ export default function AuctionDetailPage() {
                     </Tab>
                     <Tab key="tokens" title="Token IDs">
                       <div className="max-h-40 overflow-y-auto">
-                        <div className="grid grid-cols-10 gap-1 text-xs">
-                          {auction.tokenIds.slice(0, 50).map(tokenId => (
-                            <span key={tokenId} className="p-1 bg-gray-100 rounded text-center">
-                              #{tokenId}
-                            </span>
-                          ))}
-                          {auction.tokenIds.length > 50 && (
-                            <span className="p-1 bg-gray-200 rounded text-center">
-                              +{auction.tokenIds.length - 50}
-                            </span>
-                          )}
-                        </div>
+                        {domainInfos?.map((domain, idx) => 
+                          <div key={idx} className="p-4 flex flex-col items-center">
+                            <div className="w-full mb-3 rounded-lg overflow-hidden flex items-center justify-center">
+                              <Image 
+                                alt="Token Image" 
+                                src={domain?.image ?? '/images/domain.png'} 
+                                width={100} 
+                                height={90}
+                                className="object-cover rounded-lg"
+                              />
+                            </div>
+                            <div className="text-center">
+                                <Chip 
+                                  key={idx} 
+                                  size="sm" 
+                                  color="success" 
+                                  variant="flat" 
+                                  className="mr-2 cursor-pointer"
+                                  onClick={() => window.open(`https://explorer-testnet.doma.xyz/token/${CONTRACT_ADDRESSES.OWNERSHIP_TOKEN}/instance/${domain.tokenId}`, '_blank')}
+                                  endContent={<span className="text-xs">↗</span>}
+                                >
+                                  {domain?.name}
+                                </Chip>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </Tab>
                   </Tabs>
@@ -440,8 +458,7 @@ export default function AuctionDetailPage() {
             <ModalBody>
               <div className="space-y-4">
                 <Alert color='primary' title={`Current price: ${parseFloat(auction.currentPrice).toFixed(8)} ETH per Domain`} />
-                
-                
+                                
                 <div>
                   <label className="text-sm font-medium mb-2 block">
                     Desired Domains: {hardBidFraction}
