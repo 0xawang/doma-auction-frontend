@@ -6,6 +6,9 @@ import { motion } from "framer-motion";
 
 import { linkToBlockExplorer, shortenAddress } from "@/utils/token";
 import { useWeb3 } from "@/hooks/useWeb3";
+import { DOMA_CHAINID } from "@/config/web3";
+import { useSwitchChain } from "wagmi";
+import { useRouter } from "next/router";
 
 interface AuctionCardProps {
   auction: any;
@@ -13,7 +16,16 @@ interface AuctionCardProps {
 }
 
 export function AuctionCard({ auction, index }: AuctionCardProps) {
-  const { isConnected } = useWeb3();
+  const { isConnected, chain } = useWeb3();
+  const { switchChain } = useSwitchChain();
+  const router = useRouter();
+
+  const handleViewAuction = async () => {
+    if (chain?.id !== DOMA_CHAINID) {
+      await switchChain({ chainId: DOMA_CHAINID });
+    }
+    router.push(`/auctions/${auction.id}`);
+  };
 
   return (
     <motion.div
@@ -93,14 +105,13 @@ export function AuctionCard({ auction, index }: AuctionCardProps) {
             )}
 
             <Button
-              as={Link}
               className="w-full mt-4"
               color="primary"
-              href={`/auctions/${auction.id}`}
               isDisabled={!isConnected}
               variant={isConnected ? "solid" : "bordered"}
+              onPress={handleViewAuction}
             >
-              {isConnected ? "View & Bid" : "Connect Wallet to Bid"}
+              {isConnected ? chain?.id == DOMA_CHAINID ? "View & Bid" : "Switch to Doma Network" : "Connect Wallet to Bid"}
             </Button>
           </div>
         </CardBody>
