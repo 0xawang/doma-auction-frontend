@@ -15,7 +15,7 @@ export const domaChain = {
     },
   },
   blockExplorers: {
-    default: { name: 'Explorer', url: 'https://explorer-testnet.doma.xyz' },
+    default: { name: 'Explorer', url: process.env.NEXT_PUBLIC_DOMA_BLOCK_EXPLORER || 'https://explorer-testnet.doma.xyz' },
   },
 }
 

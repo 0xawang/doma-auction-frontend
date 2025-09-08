@@ -287,7 +287,7 @@ export default function AuctionDetailPage() {
                                   color="success" 
                                   variant="flat" 
                                   className="mr-2 cursor-pointer"
-                                  onClick={() => window.open(`https://explorer-testnet.doma.xyz/token/${CONTRACT_ADDRESSES.OWNERSHIP_TOKEN}/instance/${domain.id}`, '_blank')}
+                                  onClick={() => window.open(`${process.env.NEXT_PUBLIC_DOMA_BLOCK_EXPLORER}/token/${CONTRACT_ADDRESSES.OWNERSHIP_TOKEN}/instance/${domain.id}`, '_blank')}
                                   endContent={<span className="text-xs">↗</span>}
                                 >
                                   {domain?.name}
