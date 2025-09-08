@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const instancePromises = tokenIds.map(async (tokenId: string) => {
       try {
         const instanceResponse = await fetch(
-          `https://explorer-doma-dev-ix58nm4rnd.t.conduit.xyz/api/v2/tokens/${CONTRACT_ADDRESSES.OWNERSHIP_TOKEN}/instances/${tokenId}`
+          `${process.env.NEXT_PUBLIC_METADATA_API}/${CONTRACT_ADDRESSES.OWNERSHIP_TOKEN}/instances/${tokenId}`
         )
         if (instanceResponse.ok) {
           const instanceData = await instanceResponse.json()
