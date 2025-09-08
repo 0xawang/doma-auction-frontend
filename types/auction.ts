@@ -22,6 +22,7 @@ export interface Auction {
 }
 
 export interface DomainInfo {
+  id: string,
   name: string,
   image?: string
 }

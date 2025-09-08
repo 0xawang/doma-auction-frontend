@@ -21,6 +21,7 @@ import { Alert, Image, Link } from '@heroui/react'
 import { PriceCard } from '@/components/auctions/PriceCard'
 import { BiddingPanel } from '@/components/auctions/BiddingPanel'
 import { CONTRACT_ADDRESSES } from '@/config/web3'
+import { DomainInfo } from '@/types/auction'
 
 export default function AuctionDetailPage() {
   const router = useRouter()
@@ -268,7 +269,7 @@ export default function AuctionDetailPage() {
                     </Tab>
                     <Tab key="tokens" title="Token IDs">
                       <div className="max-h-40 overflow-y-auto">
-                        {domainInfos?.map((domain, idx) => 
+                        {domainInfos?.map((domain: DomainInfo, idx: number) => 
                           <div key={idx} className="p-4 flex flex-col items-center">
                             <div className="w-full mb-3 rounded-lg overflow-hidden flex items-center justify-center">
                               <Image 
@@ -286,7 +287,7 @@ export default function AuctionDetailPage() {
                                   color="success" 
                                   variant="flat" 
                                   className="mr-2 cursor-pointer"
-                                  onClick={() => window.open(`https://explorer-testnet.doma.xyz/token/${CONTRACT_ADDRESSES.OWNERSHIP_TOKEN}/instance/${domain.tokenId}`, '_blank')}
+                                  onClick={() => window.open(`https://explorer-testnet.doma.xyz/token/${CONTRACT_ADDRESSES.OWNERSHIP_TOKEN}/instance/${domain.id}`, '_blank')}
                                   endContent={<span className="text-xs">↗</span>}
                                 >
                                   {domain?.name}
