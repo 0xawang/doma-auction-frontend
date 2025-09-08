@@ -1,17 +1,17 @@
-import { useState } from 'react'
-import { Card, CardBody } from '@heroui/card'
-import { Button } from '@heroui/button'
-import { Input } from '@heroui/input'
-import { Chip } from '@heroui/chip'
-import { motion } from 'framer-motion'
+import { useState } from "react";
+import { Card, CardBody } from "@heroui/card";
+import { Button } from "@heroui/button";
+import { Input } from "@heroui/input";
+import { Chip } from "@heroui/chip";
+import { motion } from "framer-motion";
 
-import { title } from '@/components/primitives'
-import DefaultLayout from '@/layouts/default'
+import { title } from "@/components/primitives";
+import DefaultLayout from "@/layouts/default";
 
 const docSections = [
   {
-    id: 'overview',
-    title: '📖 Overview',
+    id: "overview",
+    title: "📖 Overview",
     content: `
 # DomaAuction Protocol
 
@@ -23,11 +23,11 @@ DomaAuction is a next-generation hybrid Dutch auction system designed specifical
 - **Fractional Ownership**: Buy portions of bundles (10%, 25%, etc.)
 - **Gamified Bidding**: Soft bids with loyalty rewards
 - **Dynamic Royalties**: Reverse royalty engine that increases over time
-    `
+    `,
   },
   {
-    id: 'getting-started',
-    title: '🚀 Getting Started',
+    id: "getting-started",
+    title: "🚀 Getting Started",
     content: `
 # Getting Started
 
@@ -54,11 +54,11 @@ DomaAuction is a next-generation hybrid Dutch auction system designed specifical
   blockExplorer: "https://explorer-testnet.doma.xyz"
 }
 \`\`\`
-    `
+    `,
   },
   {
-    id: 'auctions',
-    title: '🏷️ Creating Auctions',
+    id: "auctions",
+    title: "🏷️ Creating Auctions",
     content: `
 # Creating Auctions
 
@@ -100,11 +100,11 @@ createBatchAuction(
   0                // No reverse royalty
 )
 \`\`\`
-    `
+    `,
   },
   {
-    id: 'bidding',
-    title: '🎯 Bidding System',
+    id: "bidding",
+    title: "🎯 Bidding System",
     content: `
 # Bidding System
 
@@ -138,11 +138,11 @@ Bonds are:
 - Automatically refunded after auction
 - Used to prevent spam bidding
 - Returned even if bid doesn't convert
-    `
+    `,
   },
   {
-    id: 'smart-contracts',
-    title: '📋 Smart Contracts',
+    id: "smart-contracts",
+    title: "📋 Smart Contracts",
     content: `
 # Smart Contracts
 
@@ -178,11 +178,11 @@ event SoftBidPlaced(uint256 indexed auctionId, address bidder, uint256 threshold
 event SoftBidConverted(uint256 indexed auctionId, address bidder, uint256 price, uint256 count);
 event AuctionCleared(uint256 indexed auctionId, uint256 clearingPrice, uint256 totalRewards, uint256 royaltyAmount);
 \`\`\`
-    `
+    `,
   },
   {
-    id: 'api',
-    title: '🔌 API Reference',
+    id: "api",
+    title: "🔌 API Reference",
     content: `
 # API Reference
 
@@ -257,11 +257,11 @@ query names($ownedBy: [AddressCAIP10!]) {
   }
 }
 \`\`\`
-    `
+    `,
   },
   {
-    id: 'examples',
-    title: '💡 Examples',
+    id: "examples",
+    title: "💡 Examples",
     content: `
 # Examples
 
@@ -340,20 +340,23 @@ await placeSoftBid(
   10    // desired percentage
 )
 \`\`\`
-    `
-  }
-]
+    `,
+  },
+];
 
 export default function DocsPage() {
-  const [activeSection, setActiveSection] = useState('overview')
-  const [searchTerm, setSearchTerm] = useState('')
+  const [activeSection, setActiveSection] = useState("overview");
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredSections = docSections.filter(section =>
-    section.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    section.content.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const filteredSections = docSections.filter(
+    (section) =>
+      section.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      section.content.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
 
-  const activeContent = docSections.find(section => section.id === activeSection)
+  const activeContent = docSections.find(
+    (section) => section.id === activeSection,
+  );
 
   return (
     <DefaultLayout>
@@ -361,7 +364,7 @@ export default function DocsPage() {
         {/* Sidebar */}
         <div className="w-80 p-6 overflow-y-auto">
           <div className="mb-6">
-            <h2 className={title({ size: 'sm' })}>Documentation</h2>
+            <h2 className={title({ size: "sm" })}>Documentation</h2>
             <p className="text-gray-400 text-sm mt-2">
               Complete guide to DomaAuction protocol
             </p>
@@ -370,10 +373,10 @@ export default function DocsPage() {
           <div className="mb-6">
             <Input
               placeholder="Search docs..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
               size="sm"
               startContent={<span>🔍</span>}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
@@ -381,9 +384,9 @@ export default function DocsPage() {
             {filteredSections.map((section) => (
               <Button
                 key={section.id}
-                variant={activeSection === section.id ? "flat" : "light"}
-                color={activeSection === section.id ? "primary" : "default"}
                 className="w-full justify-start h-auto p-3"
+                color={activeSection === section.id ? "primary" : "default"}
+                variant={activeSection === section.id ? "flat" : "light"}
                 onPress={() => setActiveSection(section.id)}
               >
                 <div className="text-left">
@@ -396,7 +399,9 @@ export default function DocsPage() {
           <div className="mt-8 pt-6 border-t border-gray-200">
             <div className="space-y-2 text-xs text-gray-500">
               <div className="flex items-center gap-2">
-                <Chip size="sm" color="success" variant="dot">Live</Chip>
+                <Chip color="success" size="sm" variant="dot">
+                  Live
+                </Chip>
                 <span>Doma Testnet</span>
               </div>
               <div>Chain ID: 97476</div>
@@ -410,25 +415,43 @@ export default function DocsPage() {
           <div className="max-w-4xl mx-auto p-8">
             <motion.div
               key={activeSection}
-              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.3 }}
             >
               <Card className="p-6">
                 <CardBody>
                   <div className="prose prose-gray max-w-none">
-                    <div 
-                      className="whitespace-pre-wrap leading-relaxed"
+                    <div
                       dangerouslySetInnerHTML={{
-                        __html: activeContent?.content
-                          .replace(/^### (.*$)/gm, '<h3 class="text-lg font-semibold mt-2">$1</h3>')
-                          .replace(/^## (.*$)/gm, '<h2 class="text-xl font-semibold mt-3">$1</h2>')
-                          .replace(/^# (.*$)/gm, '<h1 class="text-2xl font-bold mt-4">$1</h1>')
-                          .replace(/\*\*([^*]+)\*\*/g, '<strong class="font-semibold">$1</strong>')
-                          .replace(/`([^`]+)`/g, '<code class="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono">$1</code>')
-                          .replace(/```([\s\S]*?)```/g, '<pre class="text-gray-100 p-4 rounded-lg overflow-x-auto my-4"><code>$1</code></pre>')
-                          || ''
+                        __html:
+                          activeContent?.content
+                            .replace(
+                              /^### (.*$)/gm,
+                              '<h3 class="text-lg font-semibold mt-2">$1</h3>',
+                            )
+                            .replace(
+                              /^## (.*$)/gm,
+                              '<h2 class="text-xl font-semibold mt-3">$1</h2>',
+                            )
+                            .replace(
+                              /^# (.*$)/gm,
+                              '<h1 class="text-2xl font-bold mt-4">$1</h1>',
+                            )
+                            .replace(
+                              /\*\*([^*]+)\*\*/g,
+                              '<strong class="font-semibold">$1</strong>',
+                            )
+                            .replace(
+                              /`([^`]+)`/g,
+                              '<code class="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono">$1</code>',
+                            )
+                            .replace(
+                              /```([\s\S]*?)```/g,
+                              '<pre class="text-gray-100 p-4 rounded-lg overflow-x-auto my-4"><code>$1</code></pre>',
+                            ) || "",
                       }}
+                      className="whitespace-pre-wrap leading-relaxed"
                     />
                   </div>
                 </CardBody>
@@ -438,5 +461,5 @@ export default function DocsPage() {
         </div>
       </div>
     </DefaultLayout>
-  )
+  );
 }

@@ -1,13 +1,13 @@
-import { Card, CardBody, CardHeader } from '@heroui/card'
-import { Progress } from '@heroui/progress'
+import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Progress } from "@heroui/progress";
 
 interface PriceCardProps {
-  auction: any
+  auction: any;
 }
 
 export function PriceCard({ auction }: PriceCardProps) {
   return (
-    <Card className='p-4'>
+    <Card className="p-4">
       <CardHeader>
         <div className="flex items-center gap-2">
           <span className="text-xl">💰</span>
@@ -24,31 +24,32 @@ export function PriceCard({ auction }: PriceCardProps) {
           </div>
           <div className="text-center">
             <p className="text-sm text-gray-500 mb-1">Started At</p>
-            <p className="text-xl font-semibold">
-              {auction.startPrice} DOMA
-            </p>
+            <p className="text-xl font-semibold">{auction.startPrice} DOMA</p>
           </div>
           <div className="text-center">
             <p className="text-sm text-gray-500 mb-1">Reserve Price</p>
-            <p className="text-xl font-semibold">
-              {auction.reservePrice} DOMA
-            </p>
+            <p className="text-xl font-semibold">{auction.reservePrice} DOMA</p>
           </div>
         </div>
-        
+
         <div className="mt-6">
           <div className="flex justify-between text-sm mb-2">
             <span>Price Decay</span>
             <span>{auction.priceDecrement} DOMA per block</span>
           </div>
-          <Progress 
-            value={((parseFloat(auction.startPrice) - parseFloat(auction.currentPrice!)) / 
-                    (parseFloat(auction.startPrice) - parseFloat(auction.reservePrice))) * 100}
-            color="warning"
+          <Progress
             aria-label="Price decay progress"
+            color="warning"
+            value={
+              ((parseFloat(auction.startPrice) -
+                parseFloat(auction.currentPrice!)) /
+                (parseFloat(auction.startPrice) -
+                  parseFloat(auction.reservePrice))) *
+              100
+            }
           />
         </div>
       </CardBody>
     </Card>
-  )
+  );
 }

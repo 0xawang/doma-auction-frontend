@@ -1,21 +1,16 @@
-import { 
-  Card,
-  CardHeader,
-  CardBody,
-  Switch,
-  Slider,
-  Input,
-  Button,
-} from '@heroui/react'
+import { Card, CardHeader, CardBody, Switch, Slider } from "@heroui/react";
 
 interface AdvancedFeaturesProps {
-  formData: any
-  setFormData: (data: any) => void
+  formData: any;
+  setFormData: (data: any) => void;
 }
 
-export function AdvancedFeatures({ formData, setFormData }: AdvancedFeaturesProps) {
+export function AdvancedFeatures({
+  formData,
+  setFormData,
+}: AdvancedFeaturesProps) {
   return (
-    <Card className='p-4'>
+    <Card className="p-4">
       <CardHeader>
         <h3 className="text-xl font-semibold">Advanced Features</h3>
       </CardHeader>
@@ -31,23 +26,31 @@ export function AdvancedFeatures({ formData, setFormData }: AdvancedFeaturesProp
             </div>
             <Switch
               isSelected={formData.enableRewards}
-              onValueChange={(value) => setFormData({...formData, enableRewards: value})}
+              onValueChange={(value) =>
+                setFormData({ ...formData, enableRewards: value })
+              }
             />
           </div>
 
           {formData.enableRewards && (
             <div>
               <label className="text-sm font-medium mb-2 block">
-                Reward Budget: {formData.rewardBudgetBps / 100}% of sale proceeds
+                Reward Budget: {formData.rewardBudgetBps / 100}% of sale
+                proceeds
               </label>
               <Slider
-                value={formData.rewardBudgetBps}
-                onChange={(value) => setFormData({...formData, rewardBudgetBps: Array.isArray(value) ? value[0] : value})}
-                minValue={0}
-                maxValue={500}
-                step={25}
-                className="mb-2"
                 aria-label="Reward budget percentage"
+                className="mb-2"
+                maxValue={500}
+                minValue={0}
+                step={25}
+                value={formData.rewardBudgetBps}
+                onChange={(value) =>
+                  setFormData({
+                    ...formData,
+                    rewardBudgetBps: Array.isArray(value) ? value[0] : value,
+                  })
+                }
               />
               <p className="text-xs text-gray-500">
                 Maximum 5% of sale proceeds can be allocated to rewards
@@ -65,7 +68,9 @@ export function AdvancedFeatures({ formData, setFormData }: AdvancedFeaturesProp
             </div>
             <Switch
               isSelected={formData.enableRoyalty}
-              onValueChange={(value) => setFormData({...formData, enableRoyalty: value})}
+              onValueChange={(value) =>
+                setFormData({ ...formData, enableRoyalty: value })
+              }
             />
           </div>
 
@@ -75,13 +80,18 @@ export function AdvancedFeatures({ formData, setFormData }: AdvancedFeaturesProp
                 Royalty Increment: {formData.royaltyIncrement / 100}% per block
               </label>
               <Slider
-                value={formData.royaltyIncrement}
-                onChange={(value) => setFormData({...formData, royaltyIncrement: Array.isArray(value) ? value[0] : value})}
-                minValue={0}
-                maxValue={50}
-                step={1}
-                className="mb-2"
                 aria-label="Royalty increment per block"
+                className="mb-2"
+                maxValue={50}
+                minValue={0}
+                step={1}
+                value={formData.royaltyIncrement}
+                onChange={(value) =>
+                  setFormData({
+                    ...formData,
+                    royaltyIncrement: Array.isArray(value) ? value[0] : value,
+                  })
+                }
               />
               <p className="text-xs text-gray-500">
                 Royalty starts at 0% and increases by this amount each block
@@ -91,5 +101,5 @@ export function AdvancedFeatures({ formData, setFormData }: AdvancedFeaturesProp
         </div>
       </CardBody>
     </Card>
-  )
+  );
 }

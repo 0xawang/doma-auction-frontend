@@ -17,9 +17,8 @@ import { Logo } from "@/components/icons";
 import { WalletConnect } from "@/components/wallet-connect";
 
 export const Navbar = () => {
-
   return (
-    <HeroUINavbar maxWidth="xl" position="sticky" className="h-32">
+    <HeroUINavbar className="h-32" maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
@@ -49,7 +48,6 @@ export const Navbar = () => {
         className="hidden sm:flex basis-1/5 sm:basis-full"
         justify="end"
       >
-
         <NavbarItem>
           <WalletConnect />
         </NavbarItem>
@@ -63,10 +61,7 @@ export const Navbar = () => {
         <div className="mx-4 mt-2 flex flex-col gap-2">
           {siteConfig.navMenuItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                href={item.href}
-                size="lg"
-              >
+              <Link href={item.href} size="lg">
                 {item.label}
               </Link>
             </NavbarMenuItem>

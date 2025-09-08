@@ -1,24 +1,24 @@
-import { Card, CardBody, CardHeader } from '@heroui/card'
-import { Button } from '@heroui/button'
-import { Chip } from '@heroui/chip'
-import { Link } from '@heroui/link'
-import { motion } from 'framer-motion'
+import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Button } from "@heroui/button";
+import { Chip } from "@heroui/chip";
+import { Link } from "@heroui/link";
+import { motion } from "framer-motion";
 
-import { linkToBlockExplorer, shortenAddress } from '@/utils/token'
-import { useWeb3 } from '@/hooks/useWeb3'
+import { linkToBlockExplorer, shortenAddress } from "@/utils/token";
+import { useWeb3 } from "@/hooks/useWeb3";
 
 interface AuctionCardProps {
-  auction: any
-  index: number
+  auction: any;
+  index: number;
 }
 
 export function AuctionCard({ auction, index }: AuctionCardProps) {
-  const { isConnected } = useWeb3()
+  const { isConnected } = useWeb3();
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 20 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
     >
       <Card className="h-full hover:shadow-lg transition-shadow p-4">
@@ -29,22 +29,21 @@ export function AuctionCard({ auction, index }: AuctionCardProps) {
                 <span className="text-white text-lg">🏷️</span>
               </div>
               <div>
-                <h3 className="text-lg font-semibold">
-                  Auction #{auction.id}
-                </h3>
+                <h3 className="text-lg font-semibold">Auction #{auction.id}</h3>
                 <p className="text-sm text-gray-500">
-                  {auction.tokenIds.length} Domain{auction.tokenIds.length > 1 ? 's' : ''}
+                  {auction.tokenIds.length} Domain
+                  {auction.tokenIds.length > 1 ? "s" : ""}
                 </p>
               </div>
             </div>
             <div className="flex gap-1">
               {auction.royaltyIncrement != 0 && (
-                <Chip size="sm" color="secondary" variant="flat">
+                <Chip color="secondary" size="sm" variant="flat">
                   Royalty+
                 </Chip>
               )}
               {auction.rewardBudgetBps > 0 && (
-                <Chip size="sm" color="success" variant="flat">
+                <Chip color="success" size="sm" variant="flat">
                   Rewards
                 </Chip>
               )}
@@ -60,7 +59,7 @@ export function AuctionCard({ auction, index }: AuctionCardProps) {
                 <span className="font-semibold text-blue-600">
                   {auction.currentPrice} ETH
                 </span>
-              </div>                      
+              </div>
               <div className="flex justify-between text-sm text-gray-500">
                 <span>Started at:</span>
                 <span>{auction.startPrice} ETH</span>
@@ -74,7 +73,11 @@ export function AuctionCard({ auction, index }: AuctionCardProps) {
             <div className="flex justify-between text-sm">
               <span>Seller:</span>
               <span className="font-mono">
-                <Link isExternal showAnchorIcon href={linkToBlockExplorer(auction.seller)}>
+                <Link
+                  isExternal
+                  showAnchorIcon
+                  href={linkToBlockExplorer(auction.seller)}
+                >
                   {shortenAddress(auction.seller)}
                 </Link>
               </span>
@@ -91,17 +94,17 @@ export function AuctionCard({ auction, index }: AuctionCardProps) {
 
             <Button
               as={Link}
-              href={`/auctions/${auction.id}`}
-              color="primary"
-              variant={isConnected ? "solid" : "bordered"}
               className="w-full mt-4"
+              color="primary"
+              href={`/auctions/${auction.id}`}
               isDisabled={!isConnected}
+              variant={isConnected ? "solid" : "bordered"}
             >
-              {isConnected ? 'View & Bid' : 'Connect Wallet to Bid'}
+              {isConnected ? "View & Bid" : "Connect Wallet to Bid"}
             </Button>
           </div>
         </CardBody>
       </Card>
     </motion.div>
-  )
+  );
 }

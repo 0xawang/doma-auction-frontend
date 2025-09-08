@@ -1,47 +1,52 @@
-import { useState, useEffect } from 'react'
-import { Card, CardBody, CardHeader } from '@heroui/card'
-import { Button } from '@heroui/button'
-import { Chip } from '@heroui/chip'
-import { Progress } from '@heroui/progress'
-import { Input } from '@heroui/input'
-import { Select, SelectItem } from '@heroui/select'
-import { Link } from '@heroui/link'
-import { motion } from 'framer-motion'
+import { useState } from "react";
+import { Button } from "@heroui/button";
+import { Chip } from "@heroui/chip";
+import { Input } from "@heroui/input";
+import { Select, SelectItem } from "@heroui/select";
+import { Link } from "@heroui/link";
+import { Image } from "@heroui/react";
 
-import { title } from '@/components/primitives'
-import DefaultLayout from '@/layouts/default'
-import { useAuctionCounter, useAuctionsData } from '@/hooks/useAuctions'
-import { useWeb3 } from '@/hooks/useWeb3'
-import { linkToBlockExplorer, shortenAddress } from '@/utils/token'
-import { Image } from '@heroui/react'
-import { AuctionCard } from '@/components/auctions/AuctionCard'
+import { title } from "@/components/primitives";
+import DefaultLayout from "@/layouts/default";
+import { useAuctionCounter, useAuctionsData } from "@/hooks/useAuctions";
+import { useWeb3 } from "@/hooks/useWeb3";
+import { AuctionCard } from "@/components/auctions/AuctionCard";
 
 export default function AuctionsPage() {
-  const { isConnected } = useWeb3()
-  const { auctionCounter } = useAuctionCounter()
-  const { auctions } = useAuctionsData(auctionCounter)
-  const [filter, setFilter] = useState('all')
-  const [sortBy, setSortBy] = useState('timeLeft')
-  const [searchTerm, setSearchTerm] = useState('')
+  const { isConnected } = useWeb3();
+  const { auctionCounter } = useAuctionCounter();
+  const { auctions } = useAuctionsData(auctionCounter);
+  const [filter, setFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("timeLeft");
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredAuctions = auctions.filter(auction => {
-    if (filter === 'active' && !auction.active) return false
-    if (filter === 'ending' && auction.timeLeft > '1h') return false
-    if (searchTerm && !auction.seller.toLowerCase().includes(searchTerm.toLowerCase())) return false
-    return true
-  })
+  const filteredAuctions = auctions.filter((auction) => {
+    if (filter === "active" && !auction.active) return false;
+    if (filter === "ending" && auction.timeLeft > "1h") return false;
+    if (
+      searchTerm &&
+      !auction.seller.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+      return false;
+
+    return true;
+  });
 
   return (
     <DefaultLayout>
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>
-            <h1 className={title({class: "gradient-metal"})}>Active Auctions</h1>
+            <h1 className={title({ class: "gradient-metal" })}>
+              Active Auctions
+            </h1>
             <p className="text-gray-600 mt-2">
-              {auctionCounter > 0 ? `${auctionCounter} total auctions created` : 'Browse live hybrid Dutch auctions'}
+              {auctionCounter > 0
+                ? `${auctionCounter} total auctions created`
+                : "Browse live hybrid Dutch auctions"}
             </p>
           </div>
-          
+
           {!isConnected && (
             <div className="mt-4 md:mt-0">
               <Chip color="warning" variant="flat">
@@ -54,18 +59,20 @@ export default function AuctionsPage() {
         {/* Filters */}
         <div className="flex flex-col md:flex-row gap-4 mb-8">
           <Input
+            className="md:w-80"
             placeholder="Search by seller address..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="md:w-80"
           />
-          
+
           <Select
+            aria-label="Filter auctions by status"
+            className="md:w-48"
             placeholder="Filter auctions"
             selectedKeys={[filter]}
-            onSelectionChange={(keys) => setFilter(Array.from(keys)[0] as string)}
-            className="md:w-48"
-            aria-label="Filter auctions by status"
+            onSelectionChange={(keys) =>
+              setFilter(Array.from(keys)[0] as string)
+            }
           >
             <SelectItem key="all">All Auctions</SelectItem>
             <SelectItem key="active">Active Only</SelectItem>
@@ -73,11 +80,13 @@ export default function AuctionsPage() {
           </Select>
 
           <Select
+            aria-label="Sort auctions by criteria"
+            className="md:w-48"
             placeholder="Sort by"
             selectedKeys={[sortBy]}
-            onSelectionChange={(keys) => setSortBy(Array.from(keys)[0] as string)}
-            className="md:w-48"
-            aria-label="Sort auctions by criteria"
+            onSelectionChange={(keys) =>
+              setSortBy(Array.from(keys)[0] as string)
+            }
           >
             <SelectItem key="timeLeft">Time Left</SelectItem>
             <SelectItem key="price">Current Price</SelectItem>
@@ -96,17 +105,22 @@ export default function AuctionsPage() {
           <div className="text-center py-12">
             <h3 className="text-xl font-semibold mb-2">No auctions found</h3>
             <div className="flex justify-center mb-4">
-              <Image width={200} height={150} src="/images/auction.png" alt="No auctions" />
+              <Image
+                alt="No auctions"
+                height={150}
+                src="/images/auction.png"
+                width={200}
+              />
             </div>
             <p className="text-gray-600 mb-4">
               Try adjusting your filters or check back later for new auctions.
             </p>
-            <Button as={Link} href="/create" color="primary">
+            <Button as={Link} color="primary" href="/create">
               Create First Auction
             </Button>
           </div>
         )}
       </div>
     </DefaultLayout>
-  )
+  );
 }
