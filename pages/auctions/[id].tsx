@@ -436,7 +436,7 @@ export default function AuctionDetailPage() {
                     </div>
                     <div className="flex justify-between">
                       <span>Duration:</span>
-                      <span>{auction.duration} blocks</span>
+                      <span>{auction.duration} mins</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Current Royalty:</span>

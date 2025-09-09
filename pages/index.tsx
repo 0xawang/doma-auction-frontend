@@ -98,7 +98,7 @@ export default function IndexPage() {
                 transition={{ duration: 0.5, delay: 0.1 }}
                 whileInView={{ opacity: 1, y: 0 }}
               >
-                <Card className="h-full bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+                <Card className="h-full bg-gradient-to-br from-blue-500 to-purple-600 text-white hover:scale-105 transition-transform duration-300">
                   <CardHeader className="pb-0 pt-6 px-6">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 bg-black/20 rounded-lg flex items-center justify-center">
@@ -125,7 +125,7 @@ export default function IndexPage() {
                 transition={{ duration: 0.5, delay: 0.2 }}
                 whileInView={{ opacity: 1, y: 0 }}
               >
-                <Card className="h-full bg-gradient-to-br from-purple-500 to-orange-600 text-white">
+                <Card className="h-full bg-gradient-to-br from-purple-500 to-orange-600 text-white hover:scale-105 transition-transform duration-300">
                   <CardHeader className="pb-0 pt-6 px-6">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 bg-black/20 rounded-lg flex items-center justify-center">
@@ -161,7 +161,7 @@ export default function IndexPage() {
                 transition={{ duration: 0.5, delay: 0.3 }}
                 whileInView={{ opacity: 1, y: 0 }}
               >
-                <Card className="h-full bg-gradient-to-br from-purple-400 to-pink-600 text-white">
+                <Card className="h-full bg-gradient-to-br from-purple-400 to-pink-600 text-white hover:scale-105 transition-transform duration-300">
                   <CardHeader className="pb-0 pt-6 px-6">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 bg-black/20 rounded-lg flex items-center justify-center">

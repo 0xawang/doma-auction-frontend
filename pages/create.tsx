@@ -16,6 +16,7 @@ import { PriceSettings } from "@/components/create/PriceSettings";
 import { AdvancedFeatures } from "@/components/create/AdvancedFeatures";
 import { AuctionPreview } from "@/components/create/AuctionPreview";
 import { NotConnected } from "@/components/create/NotConnected";
+import { useWalletModal } from "@/contexts/WalletContext";
 
 const AUCTION_CONTACT_ADDRESS =
   CONTRACT_ADDRESSES.HYBRID_DUTCH_AUCTION as `0x${string}`;
@@ -30,6 +31,7 @@ export default function CreateAuctionPage() {
   const [isApproving, setIsApproving] = useState(false);
   const [isApproved, setIsApproved] = useState(false);
 
+  const { openConnectModal } = useWalletModal()
   const [formData, setFormData] = useState({
     tokenIds: "",
     startPrice: "",
@@ -197,7 +199,7 @@ export default function CreateAuctionPage() {
           </div>
 
           {!isConnected ? (
-            <NotConnected />
+            <NotConnected onConnectClick={() => openConnectModal?.()} />
           ) : (
             <form className="space-y-8" onSubmit={handleSubmit}>
               {/* Basic Information */}

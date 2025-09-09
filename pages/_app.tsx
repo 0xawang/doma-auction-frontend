@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 
 import { fontSans, fontMono } from "@/config/fonts";
 import { config } from "@/config/web3";
+import { WalletProvider } from "@/contexts/WalletContext";
 import "@/styles/globals.css";
 import "@/styles/main.css";
 
@@ -22,8 +23,10 @@ export default function App({ Component, pageProps }: AppProps) {
       <QueryClientProvider client={queryClient}>
         <HeroUIProvider navigate={router.push}>
           <NextThemesProvider attribute="class" defaultTheme="dark">
-            <Component {...pageProps} />
-            <Toaster position="top-right" />
+            <WalletProvider>
+              <Component {...pageProps} />
+              <Toaster position="top-right" />
+            </WalletProvider>
           </NextThemesProvider>
         </HeroUIProvider>
       </QueryClientProvider>

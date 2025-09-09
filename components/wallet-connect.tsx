@@ -11,6 +11,7 @@ import { useState, useEffect } from "react";
 import { formatEther } from "viem";
 
 import { shortenAddress } from "@/utils/token";
+import { useWalletModal } from "@/contexts/WalletContext";
 
 export function WalletConnect() {
   const { address, isConnected } = useAccount();
@@ -19,6 +20,12 @@ export function WalletConnect() {
   const { disconnect } = useDisconnect();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isClient, setIsClient] = useState(false);
+
+  const { setOpenConnectModal } = useWalletModal()
+
+  useEffect(() => {
+    setOpenConnectModal(() => onOpen)
+  }, [onOpen, setOpenConnectModal])
 
   useEffect(() => {
     setIsClient(true);
