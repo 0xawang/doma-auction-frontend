@@ -10,6 +10,7 @@ import {
 import { Link } from "@heroui/link";
 import { link as linkStyles } from "@heroui/theme";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import clsx from "clsx";
 
 import { siteConfig } from "@/config/site";
@@ -17,31 +18,35 @@ import { Logo } from "@/components/icons";
 import { WalletConnect } from "@/components/wallet-connect";
 
 export const Navbar = () => {
+  const router = useRouter()
   return (
     <HeroUINavbar className="h-32" maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
             <Logo />
-            <p className="font-bold text-inherit">DomaAuction</p>
+            <p className="font-bold text-main text-inherit">Doma Hybrid Auction</p>
           </NextLink>
         </NavbarBrand>
-        <div className="hidden lg:flex gap-4 justify-start ml-2">
-          {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href}>
-              <NextLink
-                className={clsx(
-                  linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium",
-                )}
-                color="foreground"
-                href={item.href}
-              >
-                {item.label}
-              </NextLink>
-            </NavbarItem>
-          ))}
-        </div>
+
+      </NavbarContent>
+
+      <NavbarContent className="hidden lg:flex gap-4" justify="center">
+        {siteConfig.navItems.map((item) => (
+          <NavbarItem key={item.href}>
+            <NextLink
+              className={clsx(
+                linkStyles({ color: "foreground" }),
+                "data-[active=true]:text-main data-[active=true]:font-medium",
+                router.pathname === item.href ? "text-main font-medium" : ""
+              )}
+              color="foreground"
+              href={item.href}
+            >
+              {item.label}
+            </NextLink>
+          </NavbarItem>
+        ))}
       </NavbarContent>
 
       <NavbarContent
