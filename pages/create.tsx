@@ -31,7 +31,7 @@ export default function CreateAuctionPage() {
   const [isApproving, setIsApproving] = useState(false);
   const [isApproved, setIsApproved] = useState(false);
 
-  const { openConnectModal } = useWalletModal()
+  const { openConnectModal } = useWalletModal();
   const [formData, setFormData] = useState({
     tokenIds: "",
     startPrice: "",

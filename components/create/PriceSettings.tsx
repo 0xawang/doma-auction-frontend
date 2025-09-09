@@ -42,7 +42,7 @@ export function PriceSettings({
 
       <div className="grid md:grid-cols-2 gap-6">
         <Input
-          description="Price reduction per block per token"
+          description="Price reduction per minute per token"
           errorMessage={errors.priceDecrement}
           isInvalid={!!errors.priceDecrement}
           label="Price Decrement (ETH)"

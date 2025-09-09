@@ -52,12 +52,12 @@ export function AuctionPreview({
           <div className="space-y-2">
             <div className="flex justify-between">
               <span>Duration:</span>
-              <span className="font-semibold">{formData.duration} blocks</span>
+              <span className="font-semibold">{formData.duration} mins</span>
             </div>
             <div className="flex justify-between">
               <span>Price Decrement:</span>
               <span className="font-semibold">
-                {formData.priceDecrement || "0"} ETH/block
+                {formData.priceDecrement || "0"} ETH/min
               </span>
             </div>
             {formData.enableRewards && (
