@@ -2,15 +2,15 @@ export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
   name: "DomaAuction",
-  description: "Hybrid Dutch Auction Protocol for Domain NFTs",
+  description: "Dual Auction Protocol for Domain NFTs",
   navItems: [
     {
-      label: "Auctions",
-      href: "/auctions",
+      label: "Hybrid Auctions",
+      href: "/hybrid",
     },
     {
-      label: "Create",
-      href: "/create",
+      label: "Premium Auctions",
+      href: "/premium",
     },
     {
       label: "My Auctions",
@@ -23,12 +23,12 @@ export const siteConfig = {
   ],
   navMenuItems: [
     {
-      label: "Auctions",
-      href: "/auctions",
+      label: "Hybrid Auctions",
+      href: "/hybrid",
     },
     {
-      label: "Create Auction",
-      href: "/create",
+      label: "Premium Auctions",
+      href: "/premium",
     },
     {
       label: "My Auctions",

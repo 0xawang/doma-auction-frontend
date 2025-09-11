@@ -2,7 +2,7 @@ import { Image } from "@heroui/react";
 import { Chip } from "@heroui/chip";
 
 import { TokenMetadata } from "@/hooks/useOwnershipToken";
-import { shortenAddress } from "@/utils/token";
+import { openLinkToDomainExplorer, shortenAddress } from "@/utils/token";
 import { CONTRACT_ADDRESSES } from "@/config/web3";
 import { useDomainMetadata } from "@/hooks/useAuctions";
 
@@ -143,10 +143,7 @@ export function TokenSelector({
             size="sm"
             variant="flat"
             onClick={() =>
-              window.open(
-                `https://explorer-testnet.doma.xyz/token/${CONTRACT_ADDRESSES.OWNERSHIP_TOKEN}/instance/${token.tokenId}`,
-                "_blank",
-              )
+              openLinkToDomainExplorer(token.tokenId.toString())
             }
           >
             {token.name}

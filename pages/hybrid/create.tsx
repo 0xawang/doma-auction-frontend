@@ -1,22 +1,36 @@
 import { useState } from "react";
-import { Button, Card, CardBody, CardHeader } from "@heroui/react";
-import { motion } from "framer-motion";
 import { useSwitchChain, useWriteContract, useReadContract } from "wagmi";
+import { Button, Card, CardBody, CardHeader, useDisclosure } from "@heroui/react";
+import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 
 import { title } from "@/components/primitives";
-import { useAuction } from "@/hooks/useAuction";
 import { useWeb3 } from "@/hooks/useWeb3";
+import { useAuction } from "@/hooks/useAuction";
 import { ERC721_ABI } from "@/contracts/abi";
+import { useWalletModal } from "@/contexts/WalletContext";
 import { DOMA_CHAINID, CONTRACT_ADDRESSES } from "@/config/web3";
 import { TokenMetadata, useOwnershipToken } from "@/hooks/useOwnershipToken";
 import DefaultLayout from "@/layouts/default";
-import { TokenSelector } from "@/components/create/TokenSelector";
-import { PriceSettings } from "@/components/create/PriceSettings";
-import { AdvancedFeatures } from "@/components/create/AdvancedFeatures";
-import { AuctionPreview } from "@/components/create/AuctionPreview";
-import { NotConnected } from "@/components/create/NotConnected";
-import { useWalletModal } from "@/contexts/WalletContext";
+import { TokenSelector } from "@/components/hybrid/create/TokenSelector";
+import { PriceSettings } from "@/components/hybrid/create/PriceSettings";
+import { AdvancedFeatures } from "@/components/hybrid/create/AdvancedFeatures";
+import { AuctionPreview } from "@/components/hybrid/create/AuctionPreview";
+import { NotConnected } from "@/components/hybrid/create/NotConnected";
+import { ReviewModal } from "@/components/hybrid/create/ReviewModal";
+
+const defaultParam = {
+  tokenIds: "",
+  startPrice: "",
+  reservePrice: "",
+  priceDecrement: "",
+  startedAt: null,
+  duration: 300,
+  rewardBudgetBps: 100,
+  royaltyIncrement: 0,
+  enableRewards: true,
+  enableRoyalty: false,
+}
 
 const AUCTION_CONTACT_ADDRESS =
   CONTRACT_ADDRESSES.HYBRID_DUTCH_AUCTION as `0x${string}`;
@@ -30,19 +44,10 @@ export default function CreateAuctionPage() {
 
   const [isApproving, setIsApproving] = useState(false);
   const [isApproved, setIsApproved] = useState(false);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const { openConnectModal } = useWalletModal();
-  const [formData, setFormData] = useState({
-    tokenIds: "",
-    startPrice: "",
-    reservePrice: "",
-    priceDecrement: "",
-    duration: 300,
-    rewardBudgetBps: 100,
-    royaltyIncrement: 0,
-    enableRewards: true,
-    enableRoyalty: false,
-  });
+  const [formData, setFormData] = useState(defaultParam);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [selectedTokens, setSelectedTokens] = useState<Set<TokenMetadata>>(
@@ -64,18 +69,7 @@ export default function CreateAuctionPage() {
     try {
       await writeContractAsync({
         address: CONTRACT_ADDRESSES.OWNERSHIP_TOKEN as `0x${string}`,
-        abi: [
-          {
-            inputs: [
-              { name: "operator", type: "address" },
-              { name: "approved", type: "bool" },
-            ],
-            name: "setApprovalForAll",
-            outputs: [],
-            stateMutability: "nonpayable",
-            type: "function",
-          },
-        ],
+        abi: ERC721_ABI,
         functionName: "setApprovalForAll",
         args: [AUCTION_CONTACT_ADDRESS, true],
       });
@@ -132,51 +126,38 @@ export default function CreateAuctionPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleReview = (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!validateForm()) return;
+    onOpen();
+  };
 
+  const handleCreateAuction = async () => {
     try {
       const tokenIds = Array.from(selectedTokens).map((token) =>
         BigInt(token.tokenId),
       );
 
-      try {
-        await createAuction({
-          tokenIds,
-          startPrice: formData.startPrice,
-          reservePrice: formData.reservePrice,
-          priceDecrement: formData.priceDecrement,
-          duration: formData.duration,
-          rewardBudgetBps: formData.enableRewards
-            ? formData.rewardBudgetBps
-            : 0,
-          royaltyIncrement: formData.enableRoyalty
-            ? formData.royaltyIncrement
-            : 0,
-        });
-      } catch (error) {
-        console.error("Error creating auction:", error);
-
-        return;
-      }
+      await createAuction({
+        tokenIds,
+        startPrice: formData.startPrice,
+        reservePrice: formData.reservePrice,
+        priceDecrement: formData.priceDecrement,
+        duration: formData.duration,
+        rewardBudgetBps: formData.enableRewards
+          ? formData.rewardBudgetBps
+          : 0,
+        royaltyIncrement: formData.enableRoyalty
+          ? formData.royaltyIncrement
+          : 0,
+      });
 
       toast.success("Auction created successfully!");
-
-      // Reset form
-      setFormData({
-        tokenIds: "",
-        startPrice: "",
-        reservePrice: "",
-        priceDecrement: "",
-        duration: 300,
-        rewardBudgetBps: 100,
-        royaltyIncrement: 0,
-        enableRewards: true,
-        enableRoyalty: false,
-      });
+      setFormData(defaultParam);
+      setSelectedTokens(new Set());
+      onOpenChange();
     } catch (error) {
+      console.error("Error creating auction:", error);
       toast.error("Failed to create auction");
     }
   };
@@ -201,11 +182,22 @@ export default function CreateAuctionPage() {
           {!isConnected ? (
             <NotConnected onConnectClick={() => openConnectModal?.()} />
           ) : (
-            <form className="space-y-8" onSubmit={handleSubmit}>
+            <form className="space-y-8" onSubmit={handleReview}>
               {/* Basic Information */}
               <Card className="p-4">
                 <CardHeader>
-                  <h3 className="text-xl font-semibold">Basic Information</h3>
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <polyline points="14,2 14,8 20,8" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <line x1="16" y1="13" x2="8" y2="13" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                        <line x1="16" y1="17" x2="8" y2="17" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                        <polyline points="10,9 9,9 8,9" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-semibold">Basic Information</h3>
+                  </div>
                 </CardHeader>
                 <CardBody className="space-y-6">
                   <TokenSelector
@@ -254,11 +246,10 @@ export default function CreateAuctionPage() {
                       className="flex-1"
                       color="primary"
                       isDisabled={selectedTokens.size === 0}
-                      isLoading={isPending}
                       size="lg"
                       type="submit"
                     >
-                      Create Auction
+                      Review Hybrid Auction
                     </Button>
                   )
                 ) : (
@@ -286,6 +277,15 @@ export default function CreateAuctionPage() {
           )}
         </motion.div>
       </div>
+
+      <ReviewModal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        formData={formData}
+        selectedTokens={selectedTokens}
+        isPending={isPending}
+        onCreateAuction={handleCreateAuction}
+      />
     </DefaultLayout>
   );
 }

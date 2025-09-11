@@ -24,7 +24,7 @@ export function AuctionCard({ auction, index }: AuctionCardProps) {
     if (chain?.id !== DOMA_CHAINID) {
       await switchChainAsync({ chainId: DOMA_CHAINID });
     }
-    router.push(`/auctions/${auction.id}`);
+    router.push(`/hybrid/${auction.id}`);
   };
 
   return (

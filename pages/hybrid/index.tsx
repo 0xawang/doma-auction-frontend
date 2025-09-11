@@ -10,7 +10,7 @@ import { title } from "@/components/primitives";
 import DefaultLayout from "@/layouts/default";
 import { useAuctionCounter, useAuctionsData } from "@/hooks/useAuctions";
 import { useWeb3 } from "@/hooks/useWeb3";
-import { AuctionCard } from "@/components/auctions/AuctionCard";
+import { AuctionCard } from "@/components/hybrid/AuctionCard";
 
 export default function AuctionsPage() {
   const { isConnected } = useWeb3();
@@ -38,22 +38,30 @@ export default function AuctionsPage() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>
             <h1 className={title({ class: "gradient-metal" })}>
-              Active Auctions
+              Hybrid Domain Auctions
             </h1>
             <p className="text-gray-600 mt-2">
               {auctionCounter > 0
-                ? `${auctionCounter} total auctions created`
-                : "Browse live hybrid Dutch auctions"}
+                ? `${auctionCounter} batch auctions created`
+                : "Browse live batch Dutch auctions with gamified bidding"}
             </p>
           </div>
 
-          {!isConnected && (
-            <div className="mt-4 md:mt-0">
+          <div className="flex gap-4 items-center mt-4 md:mt-0">
+            {!isConnected && (
               <Chip color="warning" variant="flat">
                 Connect wallet to participate
               </Chip>
-            </div>
-          )}
+            )}
+            <Button
+              as={Link}
+              color="primary"
+              href="/hybrid/create"
+              size="lg"
+            >
+              Create Hybrid Auction
+            </Button>
+          </div>
         </div>
 
         {/* Filters */}
@@ -115,7 +123,7 @@ export default function AuctionsPage() {
             <p className="text-gray-600 mb-4">
               Try adjusting your filters or check back later for new auctions.
             </p>
-            <Button as={Link} color="primary" href="/create">
+            <Button as={Link} color="primary" href="/hybrid/create">
               Create First Auction
             </Button>
           </div>

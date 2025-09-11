@@ -12,7 +12,14 @@ export function AdvancedFeatures({
   return (
     <Card className="p-4">
       <CardHeader>
-        <h3 className="text-xl font-semibold">Advanced Features</h3>
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+          <h3 className="text-xl font-semibold">Advanced Features</h3>
+        </div>
       </CardHeader>
       <CardBody className="space-y-6">
         <div className="space-y-6">

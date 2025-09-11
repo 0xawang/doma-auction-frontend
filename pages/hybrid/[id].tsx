@@ -324,13 +324,13 @@ export default function AuctionDetailPage() {
                       </div>
                     </Tab>
                     <Tab key="tokens" title="Token IDs">
-                      <div className="max-h-40 overflow-y-auto">
+                      <div className="max-h-48 flex items-center overflow-x-auto">
                         {domainInfos?.map((domain: DomainInfo, idx: number) => (
                           <div
                             key={idx}
-                            className="p-4 flex flex-col items-center"
+                            className="p-4 flex flex-col items-center justify-center"
                           >
-                            <div className="w-full mb-3 rounded-lg overflow-hidden flex items-center justify-center">
+                            <div className="mb-3 rounded-lg overflow-hidden flex items-center justify-center">
                               <Image
                                 alt="Token Image"
                                 className="object-cover rounded-lg"

@@ -146,7 +146,7 @@ export default function MyAuctionsPage() {
                         <p className="text-gray-600 mb-4">
                           You haven&apos;t created any auctions yet
                         </p>
-                        <Button as={Link} color="primary" href="/create">
+                        <Button as={Link} color="primary" href="/hybrid/create">
                           Create Your First Auction
                         </Button>
                       </CardBody>
@@ -250,7 +250,7 @@ export default function MyAuctionsPage() {
                                     as={Link}
                                     className="flex-1"
                                     color="primary"
-                                    href={`/auctions/${auction.id}`}
+                                    href={`/hybrid/${auction.id}`}
                                     size="sm"
                                     variant="bordered"
                                   >
@@ -287,7 +287,7 @@ export default function MyAuctionsPage() {
                         <p className="text-gray-600 mb-4">
                           You haven&apos;t placed any bids yet
                         </p>
-                        <Button as={Link} color="primary" href="/auctions">
+                        <Button as={Link} color="primary" href="/hybrid">
                           Browse Auctions
                         </Button>
                       </CardBody>
@@ -313,7 +313,7 @@ export default function MyAuctionsPage() {
                             {mockUserBids.map((bid, index) => (
                               <TableRow key={index}>
                                 <TableCell>
-                                  <Link href={`/auctions/${bid.auctionId}`}>
+                                  <Link href={`/hybrid/${bid.auctionId}`}>
                                     Auction #{bid.auctionId}
                                   </Link>
                                 </TableCell>
@@ -359,7 +359,7 @@ export default function MyAuctionsPage() {
                                   <div className="flex gap-1">
                                     <Button
                                       as={Link}
-                                      href={`/auctions/${bid.auctionId}`}
+                                      href={`/hybrid/${bid.auctionId}`}
                                       size="sm"
                                       variant="light"
                                     >

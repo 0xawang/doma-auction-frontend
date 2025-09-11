@@ -1,5 +1,7 @@
 import { Input } from "@heroui/input";
+import { DatePicker } from "@heroui/react";
 import { Slider } from "@heroui/slider";
+import { getLocalTimeZone, now } from "@internationalized/date";
 
 interface PriceSettingsProps {
   formData: any;
@@ -14,7 +16,7 @@ export function PriceSettings({
 }: PriceSettingsProps) {
   return (
     <div className="space-y-6">
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-3 gap-6">
         <Input
           description="Initial auction price per token"
           errorMessage={errors.startPrice}
@@ -38,9 +40,7 @@ export function PriceSettings({
             setFormData({ ...formData, reservePrice: e.target.value })
           }
         />
-      </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
         <Input
           description="Price reduction per minute per token"
           errorMessage={errors.priceDecrement}
@@ -52,7 +52,18 @@ export function PriceSettings({
             setFormData({ ...formData, priceDecrement: e.target.value })
           }
         />
+      </div>
 
+      <div className="grid md:grid-cols-2 gap-6">
+        
+        <DatePicker 
+          hideTimeZone
+          showMonthAndYearPickers
+          defaultValue={now(getLocalTimeZone())}
+          value={formData.startedAt}
+          label="Started Time" 
+          onChange={(value) => setFormData({ ...formData, startedAt: value })}
+        />
         <div>
           <label className="text-sm font-medium mb-2 block">
             Duration: {Math.floor(formData.duration / 60)}h{" "}

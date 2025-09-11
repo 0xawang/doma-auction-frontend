@@ -5,7 +5,7 @@ import { TwitterIcon, GithubIcon, DiscordIcon } from "@/components/icons";
 
 export const Footer = () => {
   return (
-    <footer className="w-full border-t border-divider bg-background">
+    <footer className="w-full border-t border-divider bg-background/40 backdrop-blur-sm">
       <div className="mx-auto max-w-7xl px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
@@ -49,9 +49,9 @@ export const Footer = () => {
               <li>
                 <Link
                   className="text-gray-400 hover:text-gray-900"
-                  href="/auctions"
+                  href="/hybrid"
                 >
-                  Browse Auctions
+                  Hybrid Auctions
                 </Link>
               </li>
               <li>
@@ -59,7 +59,7 @@ export const Footer = () => {
                   className="text-gray-400 hover:text-gray-900"
                   href="/create"
                 >
-                  Create Auction
+                  Premium Auction
                 </Link>
               </li>
               <li>

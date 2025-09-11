@@ -12,6 +12,13 @@ export const linkToDomainOnBlockExplorer = (tokenId: string) => {
   return `${process.env.NEXT_PUBLIC_DOMA_BLOCK_EXPLORER}/token/${CONTRACT_ADDRESSES.OWNERSHIP_TOKEN}/instance/${tokenId}`;
 };
 
+export const openLinkToDomainExplorer = (tokenId: string) => {
+  window.open(
+    linkToDomainOnBlockExplorer(tokenId),
+    "_blank",
+  )
+}
+
 export const timeLeft = (endTime: number) => {
   const remaining = endTime - Math.floor(Date.now() / 1000);
 
