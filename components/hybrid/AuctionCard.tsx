@@ -33,7 +33,7 @@ export function AuctionCard({ auction, index }: AuctionCardProps) {
       initial={{ opacity: 0, y: 20 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
     >
-      <Card className="h-full hover:shadow-lg transition-shadow p-4">
+      <Card className="h-full hover:shadow-lg transition-shadow bg-[#ffffff]/20 backdrop-blur-sm p-4">
         <CardHeader className="pb-2">
           <div className="flex justify-between items-start w-full">
             <div className="flex items-start gap-3">
@@ -68,15 +68,15 @@ export function AuctionCard({ auction, index }: AuctionCardProps) {
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span>Current Price:</span>
-                <span className="font-semibold text-blue-600">
+                <span className="font-semibold text-success">
                   {auction.currentPrice} ETH
                 </span>
               </div>
-              <div className="flex justify-between text-sm text-gray-500">
-                <span>Started at:</span>
+              <div className="flex justify-between text-sm text-gray-300">
+                <span>Start Price:</span>
                 <span>{auction.startPrice} ETH</span>
               </div>
-              <div className="flex justify-between text-sm text-gray-500">
+              <div className="flex justify-between text-sm text-gray-300">
                 <span>Reserve:</span>
                 <span>{auction.reservePrice} ETH</span>
               </div>
@@ -88,6 +88,7 @@ export function AuctionCard({ auction, index }: AuctionCardProps) {
                 <Link
                   isExternal
                   showAnchorIcon
+                  color="success"
                   href={linkToBlockExplorer(auction.seller)}
                 >
                   {shortenAddress(auction.seller)}

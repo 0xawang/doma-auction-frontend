@@ -105,8 +105,8 @@ export default function AuctionsPage() {
         </div>
 
         {filteredAuctions.length === 0 && (
-          <div className="text-center py-12">
-            <h3 className="text-xl font-semibold mb-2">No auctions found</h3>
+          <div className="text-center py-12 hover:shadow-lg transition-shadow bg-[#ffffff]/20 backdrop-blur-sm rounded-lg">
+            <h3 className="text-2xl font-semibold mb-2">No auctions found</h3>
             <div className="flex justify-center mb-4">
               <Image
                 alt="No auctions"
@@ -115,7 +115,7 @@ export default function AuctionsPage() {
                 width={200}
               />
             </div>
-            <p className="text-gray-600 mb-4">
+            <p className="text-gray-300 mb-4">
               Try adjusting your filters or check back later for new auctions.
             </p>
             <Button as={Link} color="primary" href="/hybrid/create">

@@ -50,7 +50,7 @@ export function PremiumAuctionCard({
       transition={{ delay: index * 0.1, duration: 0.5 }}
     >
       <Card
-        className={`h-full hover:shadow-lg transition-shadow p-6 ${true ? "bg-blue-500/20 backdrop-blur-sm" : ""}`}
+        className={`h-full hover:shadow-lg transition-shadow p-6 ${true ? "bg-[#ffffff]/20 backdrop-blur-sm" : ""}`}
       >
         <CardHeader className="pb-2">
           <div className="flex justify-between items-start w-full">

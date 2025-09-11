@@ -107,7 +107,7 @@ export default function PremiumAuctionsPage() {
         </div>
 
         {auctionCounter === 0 && !isLoading && (
-          <div className="text-center py-12">
+          <div className="text-center py-12 hover:shadow-lg transition-shadow bg-[#ffffff]/20 backdrop-blur-sm rounded-lg">
             <h3 className="text-xl font-semibold mb-2">No auctions found</h3>
             <div className="flex justify-center mb-4">
               <Image

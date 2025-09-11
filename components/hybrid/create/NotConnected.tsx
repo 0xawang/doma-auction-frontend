@@ -7,10 +7,10 @@ interface NotConnectedProps {
 
 export function NotConnected({ onConnectClick }: NotConnectedProps) {
   return (
-    <Card>
+    <Card className="hover:shadow-lg transition-shadow bg-[#333]/60 backdrop-blur-sm">
       <CardBody className="text-center py-12">
-        <h3 className="text-xl font-semibold mb-4">Connect Your Wallet</h3>
-        <p className="text-gray-600 mb-6">
+        <h3 className="text-2xl font-semibold mb-4">Connect Your Wallet</h3>
+        <p className="text-gray-300 mb-6">
           You need to connect your wallet to create auctions
         </p>
         <div className="mx-auto mb-4">
