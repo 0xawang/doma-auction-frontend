@@ -55,13 +55,12 @@ export function PriceSettings({
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-        
-        <DatePicker 
+        <DatePicker
           hideTimeZone
           showMonthAndYearPickers
           defaultValue={now(getLocalTimeZone())}
+          label="Started Time"
           value={formData.startedAt}
-          label="Started Time" 
           onChange={(value) => setFormData({ ...formData, startedAt: value })}
         />
         <div>

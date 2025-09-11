@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { useSwitchChain, useWriteContract, useReadContract } from "wagmi";
-import { Button, Card, CardBody, CardHeader, useDisclosure } from "@heroui/react";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  useDisclosure,
+} from "@heroui/react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 
@@ -30,7 +36,7 @@ const defaultParam = {
   royaltyIncrement: 0,
   enableRewards: true,
   enableRoyalty: false,
-}
+};
 
 const AUCTION_CONTACT_ADDRESS =
   CONTRACT_ADDRESSES.HYBRID_DUTCH_AUCTION as `0x${string}`;
@@ -144,12 +150,10 @@ export default function CreateAuctionPage() {
         reservePrice: formData.reservePrice,
         priceDecrement: formData.priceDecrement,
         duration: formData.duration,
-        rewardBudgetBps: formData.enableRewards
-          ? formData.rewardBudgetBps
-          : 0,
+        rewardBudgetBps: formData.enableRewards ? formData.rewardBudgetBps : 0,
         royaltyIncrement: formData.enableRoyalty
           ? formData.royaltyIncrement
-          : 0
+          : 0,
       });
 
       toast.success("Auction created successfully!");
@@ -188,12 +192,52 @@ export default function CreateAuctionPage() {
                 <CardHeader>
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        <polyline points="14,2 14,8 20,8" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        <line x1="16" y1="13" x2="8" y2="13" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                        <line x1="16" y1="17" x2="8" y2="17" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                        <polyline points="10,9 9,9 8,9" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <svg
+                        fill="none"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                          stroke="white"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                        />
+                        <polyline
+                          points="14,2 14,8 20,8"
+                          stroke="white"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                        />
+                        <line
+                          stroke="white"
+                          strokeLinecap="round"
+                          strokeWidth="2"
+                          x1="16"
+                          x2="8"
+                          y1="13"
+                          y2="13"
+                        />
+                        <line
+                          stroke="white"
+                          strokeLinecap="round"
+                          strokeWidth="2"
+                          x1="16"
+                          x2="8"
+                          y1="17"
+                          y2="17"
+                        />
+                        <polyline
+                          points="10,9 9,9 8,9"
+                          stroke="white"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                        />
                       </svg>
                     </div>
                     <h3 className="text-xl font-semibold">Basic Information</h3>
@@ -279,12 +323,12 @@ export default function CreateAuctionPage() {
       </div>
 
       <ReviewModal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
         formData={formData}
-        selectedTokens={selectedTokens}
+        isOpen={isOpen}
         isPending={isPending}
+        selectedTokens={selectedTokens}
         onCreateAuction={handleCreateAuction}
+        onOpenChange={onOpenChange}
       />
     </DefaultLayout>
   );

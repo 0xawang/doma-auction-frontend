@@ -18,8 +18,6 @@ import { motion } from "framer-motion";
 import { title } from "@/components/primitives";
 import DefaultLayout from "@/layouts/default";
 import { useWeb3 } from "@/hooks/useWeb3";
-import { Image } from "@heroui/react";
-import NextImage from "next/image";
 import { NotConnected } from "@/components/hybrid/create/NotConnected";
 import { useWalletModal } from "@/contexts/WalletContext";
 
@@ -128,8 +126,8 @@ export default function MyAuctionsPage() {
           </div>
 
           {!isConnected ? (
-              <NotConnected onConnectClick={() => openConnectModal?.()} />
-            ) : (
+            <NotConnected onConnectClick={() => openConnectModal?.()} />
+          ) : (
             <Tabs
               className="mb-6"
               selectedKey={activeTab}
@@ -352,7 +350,9 @@ export default function MyAuctionsPage() {
                                   </Chip>
                                 </TableCell>
                                 <TableCell>
-                                  {bid.bondAmount ? `${bid.bondAmount} ETH` : "-"}
+                                  {bid.bondAmount
+                                    ? `${bid.bondAmount} ETH`
+                                    : "-"}
                                 </TableCell>
                                 <TableCell>{bid.placedAt}</TableCell>
                                 <TableCell>
@@ -412,7 +412,9 @@ export default function MyAuctionsPage() {
                           </p>
                         </div>
                         <div>
-                          <p className="text-2xl font-bold text-purple-600">2</p>
+                          <p className="text-2xl font-bold text-purple-600">
+                            2
+                          </p>
                           <p className="text-sm text-gray-600">
                             Successful Auctions
                           </p>
@@ -420,7 +422,9 @@ export default function MyAuctionsPage() {
                       </div>
 
                       <div className="mt-6 p-4 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg">
-                        <h4 className="font-semibold mb-2">Loyalty NFT Status</h4>
+                        <h4 className="font-semibold mb-2">
+                          Loyalty NFT Status
+                        </h4>
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-sm text-gray-200">
@@ -480,7 +484,8 @@ export default function MyAuctionsPage() {
                   </Card>
                 </div>
               </Tab>
-            </Tabs>) }
+            </Tabs>
+          )}
         </motion.div>
       </div>
     </DefaultLayout>

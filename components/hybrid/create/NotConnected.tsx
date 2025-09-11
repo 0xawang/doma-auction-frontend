@@ -2,7 +2,7 @@ import { Card, CardBody, Image, Button } from "@heroui/react";
 import NextImage from "next/image";
 
 interface NotConnectedProps {
-  onConnectClick: () => void
+  onConnectClick: () => void;
 }
 
 export function NotConnected({ onConnectClick }: NotConnectedProps) {
@@ -23,7 +23,12 @@ export function NotConnected({ onConnectClick }: NotConnectedProps) {
           />
         </div>
 
-        <Button className="w-1/2 mx-auto" color="primary" size="lg" onPress={onConnectClick}>
+        <Button
+          className="w-1/2 mx-auto"
+          color="primary"
+          size="lg"
+          onPress={onConnectClick}
+        >
           Connect Wallet
         </Button>
       </CardBody>

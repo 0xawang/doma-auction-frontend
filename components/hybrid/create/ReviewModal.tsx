@@ -1,6 +1,15 @@
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from "@heroui/react";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+} from "@heroui/react";
 import { Chip } from "@heroui/chip";
+
 import { TokenMetadata } from "@/hooks/useOwnershipToken";
+import { openLinkToDomainExplorer } from "@/utils/token";
 
 interface ReviewModalProps {
   isOpen: boolean;
@@ -19,43 +28,70 @@ export function ReviewModal({
   isPending,
   onCreateAuction,
 }: ReviewModalProps) {
-  const openLinkToDomainExplorer = (tokenId: string) => {
-    console.log(`Opening domain explorer for token ${tokenId}`);
-  };
-
+  
   return (
-    <Modal backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange} size="2xl" className="p-4">
+    <Modal
+      backdrop="blur"
+      className="p-4"
+      isOpen={isOpen}
+      size="2xl"
+      onOpenChange={onOpenChange}
+    >
       <ModalContent>
         {(onClose) => (
           <>
             <ModalHeader className="flex items-center gap-4">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <circle cx="12" cy="12" r="3" stroke="white" strokeWidth="2"/>
+                <svg
+                  fill="none"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+                    stroke="white"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                  />
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="3"
+                    stroke="white"
+                    strokeWidth="2"
+                  />
                 </svg>
               </div>
               <div className="flex flex-col gap-1">
                 <h3 className="text-xl font-semibold">Review Hybrid Auction</h3>
-                <p className="text-sm text-gray-500">Please review your auction details before creating</p>
+                <p className="text-sm text-gray-500">
+                  Please review your auction details before creating
+                </p>
               </div>
             </ModalHeader>
             <ModalBody>
               <div className="space-y-6">
                 <div className="p-4 border border-grey-20/10 rounded-lg">
-                  <h4 className="font-semibold mb-2">Selected Domains ({selectedTokens.size})</h4>
+                  <h4 className="font-semibold mb-2">
+                    Selected Domains ({selectedTokens.size})
+                  </h4>
                   <div className="flex flex-wrap gap-2">
                     {Array.from(selectedTokens).map((token) => (
-                      <Chip 
-                        key={token.tokenId} 
+                      <Chip
+                        key={token.tokenId}
                         className="mr-2 cursor-pointer"
                         color="success"
                         endContent={<span className="text-xs">↗</span>}
                         size="sm"
                         variant="flat"
-                        onClick={() => openLinkToDomainExplorer(token.tokenId.toString())}
+                        onClick={() =>
+                          openLinkToDomainExplorer(token.tokenId.toString())
+                        }
                       >
-                        {token.name} 
+                        {token.name}
                       </Chip>
                     ))}
                   </div>
@@ -67,19 +103,27 @@ export function ReviewModal({
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span>Start Price:</span>
-                        <span className="font-medium">{formData.startPrice} ETH</span>
+                        <span className="font-medium">
+                          {formData.startPrice} ETH
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span>Reserve Price:</span>
-                        <span className="font-medium">{formData.reservePrice} ETH</span>
+                        <span className="font-medium">
+                          {formData.reservePrice} ETH
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span>Price Decrement:</span>
-                        <span className="font-medium">{formData.priceDecrement} ETH/minute</span>
+                        <span className="font-medium">
+                          {formData.priceDecrement} ETH/minute
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span>Duration:</span>
-                        <span className="font-medium">{formData.duration} minutes</span>
+                        <span className="font-medium">
+                          {formData.duration} minutes
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -90,17 +134,23 @@ export function ReviewModal({
                       {formData.enableRewards && (
                         <div className="flex justify-between">
                           <span>Reward Budget:</span>
-                          <span className="font-medium text-green-600">{formData.rewardBudgetBps / 100}%</span>
+                          <span className="font-medium text-green-600">
+                            {formData.rewardBudgetBps / 100}%
+                          </span>
                         </div>
                       )}
                       {formData.enableRoyalty && (
                         <div className="flex justify-between">
                           <span>Royalty Increment:</span>
-                          <span className="font-medium text-purple-600">{formData.royaltyIncrement / 100}%/block</span>
+                          <span className="font-medium text-purple-600">
+                            {formData.royaltyIncrement / 100}%/block
+                          </span>
                         </div>
                       )}
                       {!formData.enableRewards && !formData.enableRoyalty && (
-                        <p className="text-gray-500 italic">No advanced features enabled</p>
+                        <p className="text-gray-500 italic">
+                          No advanced features enabled
+                        </p>
                       )}
                     </div>
                   </div>
@@ -109,9 +159,25 @@ export function ReviewModal({
                 <div className="p-4 bg-[#fff]/10 rounded-lg">
                   <h4 className="font-semibold mb-2">Bundle Summary</h4>
                   <div className="text-sm space-y-1">
-                    <p><strong>Total Domains:</strong> {selectedTokens.size}</p>
-                    <p><strong>Bundle Start Value:</strong> {(parseFloat(formData.startPrice || "0") * selectedTokens.size).toFixed(4)} ETH</p>
-                    <p><strong>Bundle Reserve Value:</strong> {(parseFloat(formData.reservePrice || "0") * selectedTokens.size).toFixed(4)} ETH</p>
+                    <p>
+                      <strong>Total Domains:</strong> {selectedTokens.size}
+                    </p>
+                    <p>
+                      <strong>Bundle Start Value:</strong>{" "}
+                      {(
+                        parseFloat(formData.startPrice || "0") *
+                        selectedTokens.size
+                      ).toFixed(4)}{" "}
+                      ETH
+                    </p>
+                    <p>
+                      <strong>Bundle Reserve Value:</strong>{" "}
+                      {(
+                        parseFloat(formData.reservePrice || "0") *
+                        selectedTokens.size
+                      ).toFixed(4)}{" "}
+                      ETH
+                    </p>
                   </div>
                 </div>
               </div>
@@ -120,8 +186,8 @@ export function ReviewModal({
               <Button color="danger" variant="light" onPress={onClose}>
                 Cancel
               </Button>
-              <Button 
-                color="primary" 
+              <Button
+                color="primary"
                 isLoading={isPending}
                 onPress={onCreateAuction}
               >

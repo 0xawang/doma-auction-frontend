@@ -1,8 +1,21 @@
-import { Card, CardBody, CardHeader, Chip, Button, Image, Link } from "@heroui/react";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Chip,
+  Button,
+  Image,
+  Link,
+} from "@heroui/react";
 import { motion } from "framer-motion";
 import { formatEther } from "viem";
+
 import { DomainInfo, PremiumAuction } from "@/types/auction";
-import { linkToBlockExplorer, openLinkToDomainExplorer, shortenAddress } from "@/utils/token";
+import {
+  linkToBlockExplorer,
+  openLinkToDomainExplorer,
+  shortenAddress,
+} from "@/utils/token";
 
 interface PremiumAuctionCardProps {
   auction: PremiumAuction;
@@ -10,7 +23,11 @@ interface PremiumAuctionCardProps {
   domainInfo?: DomainInfo;
 }
 
-export function PremiumAuctionCard({ auction, index, domainInfo }: PremiumAuctionCardProps) {
+export function PremiumAuctionCard({
+  auction,
+  index,
+  domainInfo,
+}: PremiumAuctionCardProps) {
   const now = Date.now() / 1000;
   const endTime = auction.endedAt;
   const isActive = !auction.cleared && now < endTime;
@@ -20,17 +37,21 @@ export function PremiumAuctionCard({ auction, index, domainInfo }: PremiumAuctio
     if (seconds <= 0) return "Ended";
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
+
     if (hours > 0) return `${hours}h ${minutes}m`;
+
     return `${minutes}m`;
   };
-  
+
   return (
     <motion.div
       animate={{ opacity: 1, y: 0 }}
       initial={{ opacity: 0, y: 20 }}
       transition={{ delay: index * 0.1, duration: 0.5 }}
     >
-      <Card className={`h-full hover:shadow-lg transition-shadow p-6 ${true ? 'bg-blue-500/20 backdrop-blur-sm' : ''}`}>
+      <Card
+        className={`h-full hover:shadow-lg transition-shadow p-6 ${true ? "bg-blue-500/20 backdrop-blur-sm" : ""}`}
+      >
         <CardHeader className="pb-2">
           <div className="flex justify-between items-start w-full">
             <div>
@@ -40,14 +61,14 @@ export function PremiumAuctionCard({ auction, index, domainInfo }: PremiumAuctio
                   alt="Token Image"
                   className="object-cover rounded-lg"
                   height={72}
-                  src={
-                    domainInfo?.image  || "/images/domain.png"
-                  }
+                  src={domainInfo?.image || "/images/domain.png"}
                   width={72}
                 />
-                
+
                 <div>
-                  <h4 className="text-lg font-semibold">{domainInfo?.name || "Domain Name"}</h4>
+                  <h4 className="text-lg font-semibold">
+                    {domainInfo?.name || "Domain Name"}
+                  </h4>
                   <Chip
                     className="mr-2 cursor-pointer"
                     color="success"
@@ -65,7 +86,9 @@ export function PremiumAuctionCard({ auction, index, domainInfo }: PremiumAuctio
             </div>
             <div className="flex flex-col gap-2">
               <Chip
-                color={auction.cleared ? "success" : isActive ? "primary" : "default"}
+                color={
+                  auction.cleared ? "success" : isActive ? "primary" : "default"
+                }
                 size="sm"
                 variant="flat"
               >
@@ -79,53 +102,67 @@ export function PremiumAuctionCard({ auction, index, domainInfo }: PremiumAuctio
             </div>
           </div>
         </CardHeader>
-        
+
         <CardBody className="pt-0">
           <div className="space-y-3 text-sm">
             <div className="flex justify-between">
               <span className="text-gray-300">Token ID:</span>
-              <p className="font-medium text-success">{shortenAddress(auction.tokenId.toString())}</p>
+              <p className="font-medium text-success">
+                {shortenAddress(auction.tokenId.toString())}
+              </p>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-300">Seller:</span>
-                <Link 
+              <Link
                 isExternal
                 showAnchorIcon
-                color="success" 
                 className="text-md"
-                href={linkToBlockExplorer(auction.seller)}>
-                  {shortenAddress(auction.seller)}
+                color="success"
+                href={linkToBlockExplorer(auction.seller)}
+              >
+                {shortenAddress(auction.seller)}
               </Link>
-              
             </div>
             <div className="flex justify-between">
               <span className="text-gray-300">Start Time:</span>
-              <p className="font-medium text-warning">{new Date(auction.startedAt * 1000).toLocaleString()}</p>
+              <p className="font-medium text-warning">
+                {new Date(auction.startedAt * 1000).toLocaleString()}
+              </p>
             </div>
-          
+
             <div className="flex justify-between">
               <span className="text-gray-300">End Time:</span>
-              <p className="font-medium text-warning">{new Date(auction.endedAt * 1000).toLocaleString()}</p>
+              <p className="font-medium text-warning">
+                {new Date(auction.endedAt * 1000).toLocaleString()}
+              </p>
             </div>
-          
+
             <div className="flex justify-between">
               <span className="text-gray-300">Start Price:</span>
-              <p className="font-medium text-warning">{formatEther(auction.startPrice)} ETH</p>
+              <p className="font-medium text-warning">
+                {formatEther(auction.startPrice)} ETH
+              </p>
             </div>
-          
+
             <div className="flex justify-between">
               <span className="text-gray-300">Reserve:</span>
-              <p className="font-medium text-warning">{formatEther(auction.reservePrice)} ETH</p>
+              <p className="font-medium text-warning">
+                {formatEther(auction.reservePrice)} ETH
+              </p>
             </div>
-          
+
             <div className="flex justify-between">
               <span className="text-gray-300">High Bet:</span>
-              <p className="font-medium text-warning">{formatEther(auction.highPrice)} ETH</p>
+              <p className="font-medium text-warning">
+                {formatEther(auction.highPrice)} ETH
+              </p>
             </div>
-          
+
             <div className="flex justify-between">
               <span className="text-gray-300">Low Bet:</span>
-              <p className="font-medium text-warning">{formatEther(auction.lowPrice)} ETH</p>
+              <p className="font-medium text-warning">
+                {formatEther(auction.lowPrice)} ETH
+              </p>
             </div>
 
             <div className="flex justify-between">
@@ -137,7 +174,7 @@ export function PremiumAuctionCard({ auction, index, domainInfo }: PremiumAuctio
               <span className="text-gray-300">Bettors:</span>
               <p className="font-medium text-success">62 participants</p>
             </div>
-            
+
             {auction.cleared && (
               <div className="bg-green-50 p-2 rounded">
                 <span className="text-sm text-green-600">
@@ -145,12 +182,12 @@ export function PremiumAuctionCard({ auction, index, domainInfo }: PremiumAuctio
                 </span>
               </div>
             )}
-            
+
             <Button
               as={Link}
-              href={`/premium/${auction.id}`}
               className="w-full mt-4"
               color={isActive ? "primary" : "default"}
+              href={`/premium/${auction.id}`}
               variant={isActive ? "solid" : "bordered"}
             >
               {isActive ? "Place Bid & Bet" : "View Details"}

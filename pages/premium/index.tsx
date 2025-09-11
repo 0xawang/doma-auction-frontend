@@ -14,7 +14,8 @@ import { PremiumAuctionCard } from "@/components/premium/PremiumAuctionCard";
 
 export default function PremiumAuctionsPage() {
   const { isConnected } = useWeb3();
-  const { auctionCounter, auctions, domainInfos, isLoading } = usePremiumAuctions();
+  const { auctionCounter, auctions, domainInfos, isLoading } =
+    usePremiumAuctions();
   const [filter, setFilter] = useState("all");
   const [sortBy, setSortBy] = useState("timeLeft");
   const [searchTerm, setSearchTerm] = useState("");
@@ -40,12 +41,7 @@ export default function PremiumAuctionsPage() {
                 Connect wallet to participate
               </Chip>
             )}
-            <Button
-              as={Link}
-              color="primary"
-              href="/premium/create"
-              size="lg"
-            >
+            <Button as={Link} color="primary" href="/premium/create" size="lg">
               Create Premium Auction
             </Button>
           </div>
@@ -96,13 +92,18 @@ export default function PremiumAuctionsPage() {
               <p>Loading auctions...</p>
             </div>
           )}
-          {auctions.filter(auction => !!auction).map((auction, index) => (
-            <PremiumAuctionCard 
-              key={index} 
-              auction={auction} 
-              domainInfo={domainInfos?.find(d => d.id === auction.tokenId.toString())}
-              index={index} />
-          ))}
+          {auctions
+            .filter((auction) => !!auction)
+            .map((auction, index) => (
+              <PremiumAuctionCard
+                key={index}
+                auction={auction}
+                domainInfo={domainInfos?.find(
+                  (d) => d.id === auction.tokenId.toString(),
+                )}
+                index={index}
+              />
+            ))}
         </div>
 
         {auctionCounter === 0 && !isLoading && (

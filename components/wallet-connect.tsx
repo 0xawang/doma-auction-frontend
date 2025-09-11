@@ -21,11 +21,11 @@ export function WalletConnect() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isClient, setIsClient] = useState(false);
 
-  const { setOpenConnectModal } = useWalletModal()
+  const { setOpenConnectModal } = useWalletModal();
 
   useEffect(() => {
-    setOpenConnectModal(() => onOpen)
-  }, [onOpen, setOpenConnectModal])
+    setOpenConnectModal(() => onOpen);
+  }, [onOpen, setOpenConnectModal]);
 
   useEffect(() => {
     setIsClient(true);

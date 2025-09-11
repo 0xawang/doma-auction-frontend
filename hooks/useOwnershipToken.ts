@@ -35,7 +35,6 @@ export function useOwnershipToken() {
   const fetchOwnedTokens = async (): Promise<TokenMetadata[]> => {
     if (!address || !GRAPHQL_API) {
       console.log("Missing address or GraphQL API");
-
       return [];
     }
 

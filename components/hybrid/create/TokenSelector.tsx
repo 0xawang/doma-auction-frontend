@@ -3,7 +3,6 @@ import { Chip } from "@heroui/chip";
 
 import { TokenMetadata } from "@/hooks/useOwnershipToken";
 import { openLinkToDomainExplorer, shortenAddress } from "@/utils/token";
-import { CONTRACT_ADDRESSES } from "@/config/web3";
 import { useDomainMetadata } from "@/hooks/useAuctions";
 
 interface TokenSelectorProps {
@@ -142,9 +141,7 @@ export function TokenSelector({
             endContent={<span className="text-xs">↗</span>}
             size="sm"
             variant="flat"
-            onClick={() =>
-              openLinkToDomainExplorer(token.tokenId.toString())
-            }
+            onClick={() => openLinkToDomainExplorer(token.tokenId.toString())}
           >
             {token.name}
           </Chip>

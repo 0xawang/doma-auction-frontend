@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Button, useDisclosure } from "@heroui/react";
 import { useSwitchChain, useWriteContract, useReadContract } from "wagmi";
-import {type ZonedDateTime} from "@internationalized/date";
+import { type ZonedDateTime } from "@internationalized/date";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
+import { parseEther } from "viem";
 
 import { title } from "@/components/primitives";
 import { useWeb3 } from "@/hooks/useWeb3";
@@ -18,9 +19,9 @@ import { DomainSelectionCard } from "@/components/premium/DomainSelectionCard";
 import { AuctionSettingsCard } from "@/components/premium/AuctionSettingsCard";
 import { BettingSettingsCard } from "@/components/premium/BettingSettingsCard";
 import { ReviewModal } from "@/components/premium/ReviewModal";
-import { formatEther, parseEther } from "viem";
 
-const PREMIUM_AUCTION_ADDRESS = CONTRACT_ADDRESSES.AUCTION_BETTING as `0x${string}`;
+const PREMIUM_AUCTION_ADDRESS =
+  CONTRACT_ADDRESSES.AUCTION_BETTING as `0x${string}`;
 
 const defaultParam = {
   tokenId: "",
@@ -34,7 +35,7 @@ const defaultParam = {
   enableBetting: true,
   commitDuration: "2",
   revealDuration: "2",
-}
+};
 
 export default function CreatePremiumAuctionPage() {
   const { isConnected, address, chain } = useWeb3();
@@ -69,7 +70,10 @@ export default function CreatePremiumAuctionPage() {
     query: { enabled: !!formData.tokenId },
   });
 
-  const isNFTApproved = isApprovedForAll || isTokenApproved === PREMIUM_AUCTION_ADDRESS || isApproved;
+  const isNFTApproved =
+    isApprovedForAll ||
+    isTokenApproved === PREMIUM_AUCTION_ADDRESS ||
+    isApproved;
 
   const handleApprove = async () => {
     if (!address || !formData.tokenId) return;
@@ -129,6 +133,7 @@ export default function CreatePremiumAuctionPage() {
     }
 
     setErrors(newErrors);
+
     return Object.keys(newErrors).length === 0;
   };
 
@@ -150,11 +155,11 @@ export default function CreatePremiumAuctionPage() {
         parseEther(formData.highPrice),
         parseEther(formData.lowPrice),
         parseInt(formData.commitDuration) * 3600,
-        parseInt(formData.revealDuration) * 3600
+        parseInt(formData.revealDuration) * 3600,
       );
-      
+
       toast.success("Premium auction created successfully!");
-      
+
       // Reset form
       setFormData(defaultParam);
       onOpenChange();
@@ -169,15 +174,17 @@ export default function CreatePremiumAuctionPage() {
     if (isConfirming) {
       toast.success("Confirming premium auction transaction!");
     }
-  }, [isConfirming])
+  }, [isConfirming]);
 
   useEffect(() => {
     if (isSuccess) {
       toast.success("Created premium auction successfully!");
     }
-  }, [isSuccess])
+  }, [isSuccess]);
 
-  const selectedToken = ownedTokens.find(token => token.tokenId.toString() === formData.tokenId.toString());
+  const selectedToken = ownedTokens.find(
+    (token) => token.tokenId.toString() === formData.tokenId.toString(),
+  );
 
   return (
     <DefaultLayout>
@@ -201,25 +208,24 @@ export default function CreatePremiumAuctionPage() {
           ) : (
             <form className="space-y-8" onSubmit={handleReview}>
               <DomainSelectionCard
-                formData={formData}
-                setFormData={setFormData}
-                ownedTokens={ownedTokens}
-                isLoading={isLoading}
                 errors={errors}
+                formData={formData}
+                isLoading={isLoading}
+                ownedTokens={ownedTokens}
+                setFormData={setFormData}
               />
 
               <AuctionSettingsCard
+                errors={errors}
                 formData={formData}
                 setFormData={setFormData}
-                errors={errors}
               />
 
               <BettingSettingsCard
+                errors={errors}
                 formData={formData}
                 setFormData={setFormData}
-                errors={errors}
               />
-
 
               {/* Submit */}
               <div className="flex gap-4">
@@ -274,12 +280,12 @@ export default function CreatePremiumAuctionPage() {
       </div>
 
       <ReviewModal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
         formData={formData}
-        selectedToken={selectedToken}
         isCreating={isCreating}
+        isOpen={isOpen}
+        selectedToken={selectedToken}
         onCreateAuction={handleCreateAuction}
+        onOpenChange={onOpenChange}
       />
     </DefaultLayout>
   );

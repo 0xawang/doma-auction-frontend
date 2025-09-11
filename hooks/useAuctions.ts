@@ -230,7 +230,6 @@ export function useAuctionsData(auctionCount: number) {
 }
 
 export function useDomainMetadata(tokenIds: string[] | undefined) {
-  
   const domainQueries = useQuery({
     queryKey: ["domainInfo", tokenIds?.join(",")],
     queryFn: async () => {
@@ -248,6 +247,7 @@ export function useDomainMetadata(tokenIds: string[] | undefined) {
 
         if (response.ok) {
           const { domainInfos } = await response.json();
+
           return domainInfos as DomainInfo[];
         }
       } catch (error) {

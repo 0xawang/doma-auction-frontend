@@ -1,12 +1,18 @@
-import { useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
-import { BETTING_ABI } from '@/contracts/abi';
-import { CONTRACT_ADDRESSES } from '@/config/web3';
+import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+
+import { BETTING_ABI } from "@/contracts/abi";
+import { CONTRACT_ADDRESSES } from "@/config/web3";
 
 const AUCTION_BETTING_ADDRESS =
   CONTRACT_ADDRESSES.AUCTION_BETTING as `0x${string}`;
 
 export function useBetting() {
-  const { writeContractAsync, data: hash, isPending, error } = useWriteContract();
+  const {
+    writeContractAsync,
+    data: hash,
+    isPending,
+    error,
+  } = useWriteContract();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
     hash,
   });
@@ -20,22 +26,22 @@ export function useBetting() {
     highPrice: bigint,
     lowPrice: bigint,
     commitDuration: number,
-    revealDuration: number
+    revealDuration: number,
   ) => {
     return writeContractAsync({
       address: AUCTION_BETTING_ADDRESS,
       abi: BETTING_ABI,
-      functionName: 'createAuctionBetting',
+      functionName: "createAuctionBetting",
       args: [
-        BigInt(tokenId), 
-        startPrice, 
-        reservePrice, 
-        priceDecrement, 
-        BigInt(duration), 
-        highPrice, 
+        BigInt(tokenId),
+        startPrice,
+        reservePrice,
+        priceDecrement,
+        BigInt(duration),
+        highPrice,
         lowPrice,
         BigInt(commitDuration),
-        BigInt(revealDuration)
+        BigInt(revealDuration),
       ],
     });
   };
@@ -44,26 +50,35 @@ export function useBetting() {
     return writeContractAsync({
       address: AUCTION_BETTING_ADDRESS,
       abi: BETTING_ABI,
-      functionName: 'placeBid',
+      functionName: "placeBid",
       args: [BigInt(auctionId)],
       value,
     });
   };
 
-  const commitBet = async (auctionId: number, commitHash: `0x${string}`, amount: bigint) => {
+  const commitBet = async (
+    auctionId: number,
+    commitHash: `0x${string}`,
+    amount: bigint,
+  ) => {
     return writeContractAsync({
       address: AUCTION_BETTING_ADDRESS,
       abi: BETTING_ABI,
-      functionName: 'commitBet',
+      functionName: "commitBet",
       args: [BigInt(auctionId), commitHash, amount],
     });
   };
 
-  const revealBet = async (auctionId: number, choice: number, amount: bigint, secret: bigint) => {
+  const revealBet = async (
+    auctionId: number,
+    choice: number,
+    amount: bigint,
+    secret: bigint,
+  ) => {
     return writeContractAsync({
       address: AUCTION_BETTING_ADDRESS,
       abi: BETTING_ABI,
-      functionName: 'revealBet',
+      functionName: "revealBet",
       args: [BigInt(auctionId), choice, amount, secret],
     });
   };
@@ -72,7 +87,7 @@ export function useBetting() {
     return writeContractAsync({
       address: AUCTION_BETTING_ADDRESS,
       abi: BETTING_ABI,
-      functionName: 'settleBetting',
+      functionName: "settleBetting",
       args: [BigInt(auctionId)],
     });
   };
@@ -87,7 +102,6 @@ export function useBetting() {
     isConfirming,
     isSuccess,
     hash,
-    error
+    error,
   };
-
 }

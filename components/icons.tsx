@@ -1,20 +1,20 @@
 import * as React from "react";
-
-import { IconSvgProps } from "@/types";
 import { Image } from "@heroui/react";
 import NextImage from "next/image";
+
+import { IconSvgProps } from "@/types";
 
 export const Logo: React.FC<IconSvgProps> = ({
   size = 36,
   height,
   ...props
 }) => (
- <Image
+  <Image
     alt="Wallet Image"
     as={NextImage}
+    height={60}
     src="/favicon.png"
     width={60}
-    height={60}
   />
 );
 

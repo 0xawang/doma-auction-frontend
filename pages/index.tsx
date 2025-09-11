@@ -4,17 +4,17 @@ import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { motion } from "framer-motion";
+import { Tab, Tabs } from "@heroui/react";
 
 import { title, subtitle } from "@/components/primitives";
 import DefaultLayout from "@/layouts/default";
-import { Tab, Tabs } from "@heroui/react";
 
 export default function IndexPage() {
-  const router = useRouter()
+  const router = useRouter();
 
   const navigateToPage = (link: string) => {
-    router.push(link)
-  }
+    router.push(link);
+  };
 
   return (
     <div className="relative">
@@ -52,11 +52,14 @@ export default function IndexPage() {
             initial={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <Card 
-              onPress={() => navigateToPage('/hybrid')} 
-              className="bg-gradient-to-b from-[#474a4f] to-white-900 text-white hover:scale-105 transition-transform duration-300 cursor-pointer p-12">
+            <Card
+              className="bg-gradient-to-b from-[#474a4f] to-white-900 text-white hover:scale-105 transition-transform duration-300 cursor-pointer p-12"
+              onPress={() => navigateToPage("/hybrid")}
+            >
               <CardHeader className="pb-4">
-                <h3 className="text-3xl text-success-800 font-bold">🎯 Hybrid Batch Auctions</h3>
+                <h3 className="text-3xl text-success-800 font-bold">
+                  🎯 Hybrid Batch Auctions
+                </h3>
               </CardHeader>
               <CardBody>
                 <ul className="space-y-3 text-lg mb-8">
@@ -77,11 +80,14 @@ export default function IndexPage() {
               </CardBody>
             </Card>
 
-            <Card 
-              onPress={() => navigateToPage('/premium')} 
-              className="bg-gradient-to-b from-[#474a4f] to-white-900 text-white hover:scale-105 transition-transform duration-300 cursor-pointer p-12">
+            <Card
+              className="bg-gradient-to-b from-[#474a4f] to-white-900 text-white hover:scale-105 transition-transform duration-300 cursor-pointer p-12"
+              onPress={() => navigateToPage("/premium")}
+            >
               <CardHeader className="pb-4">
-                <h3 className="text-3xl text-primary-800 font-bold">🏆 Premium Domain Auctions</h3>
+                <h3 className="text-3xl text-primary-800 font-bold">
+                  🏆 Premium Domain Auctions
+                </h3>
               </CardHeader>
               <CardBody>
                 <ul className="space-y-3 text-lg mb-8">
@@ -131,10 +137,34 @@ export default function IndexPage() {
                   <CardHeader className="pb-0 pt-6 px-6 text-center">
                     <div className="w-full">
                       <div className="flex justify-center">
-                        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M20 7L12 3L4 7L12 11L20 7Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          <path d="M4 12L12 16L20 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          <path d="M4 17L12 21L20 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <svg
+                          fill="none"
+                          height="60"
+                          viewBox="0 0 24 24"
+                          width="60"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M20 7L12 3L4 7L12 11L20 7Z"
+                            stroke="white"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M4 12L12 16L20 12"
+                            stroke="white"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M4 17L12 21L20 17"
+                            stroke="white"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                          />
                         </svg>
                       </div>
                       <h3 className="text-2xl font-bold text-white">
@@ -162,13 +192,56 @@ export default function IndexPage() {
                   <CardHeader className="pb-0 pt-6 px-6 text-center">
                     <div className="w-full">
                       <div className="flex justify-center">
-                        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <rect x="2" y="3" width="20" height="14" rx="2" stroke="white" strokeWidth="2"/>
-                          <circle cx="8" cy="14" r="2" stroke="white" strokeWidth="2"/>
-                          <path d="M16 10L18 8L20 10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          <path d="M18 8V12" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                          <path d="M6 9H6.01" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          <path d="M10 9H10.01" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <svg
+                          fill="none"
+                          height="60"
+                          viewBox="0 0 24 24"
+                          width="60"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <rect
+                            height="14"
+                            rx="2"
+                            stroke="white"
+                            strokeWidth="2"
+                            width="20"
+                            x="2"
+                            y="3"
+                          />
+                          <circle
+                            cx="8"
+                            cy="14"
+                            r="2"
+                            stroke="white"
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M16 10L18 8L20 10"
+                            stroke="white"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M18 8V12"
+                            stroke="white"
+                            strokeLinecap="round"
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M6 9H6.01"
+                            stroke="white"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M10 9H10.01"
+                            stroke="white"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                          />
                         </svg>
                       </div>
                       <h3 className="text-2xl font-bold text-white">
@@ -205,10 +278,32 @@ export default function IndexPage() {
                   <CardHeader className="pb-0 pt-6 px-6 text-center">
                     <div className="w-full">
                       <div className="flex justify-center">
-                        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          <path d="M8 18L10 16" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                          <path d="M16 6L14 8" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                        <svg
+                          fill="none"
+                          height="60"
+                          viewBox="0 0 24 24"
+                          width="60"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M13 2L3 14H12L11 22L21 10H12L13 2Z"
+                            stroke="white"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M8 18L10 16"
+                            stroke="white"
+                            strokeLinecap="round"
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M16 6L14 8"
+                            stroke="white"
+                            strokeLinecap="round"
+                            strokeWidth="2"
+                          />
                         </svg>
                       </div>
                       <h3 className="text-2xl font-bold text-white">
@@ -257,11 +352,41 @@ export default function IndexPage() {
                   <CardHeader className="pb-0 pt-6 px-6 text-center">
                     <div className="w-full">
                       <div className="flex justify-center">
-                        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          <path d="M2 17L12 22L22 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          <path d="M2 12L12 17L22 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          <circle cx="12" cy="12" r="3" stroke="white" strokeWidth="2"/>
+                        <svg
+                          fill="none"
+                          height="60"
+                          viewBox="0 0 24 24"
+                          width="60"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M12 2L2 7L12 12L22 7L12 2Z"
+                            stroke="white"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M2 17L12 22L22 17"
+                            stroke="white"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M2 12L12 17L22 12"
+                            stroke="white"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                          />
+                          <circle
+                            cx="12"
+                            cy="12"
+                            r="3"
+                            stroke="white"
+                            strokeWidth="2"
+                          />
                         </svg>
                       </div>
                       <h3 className="text-2xl font-bold text-white mt-4">
@@ -288,21 +413,79 @@ export default function IndexPage() {
                 <Card className="h-full bg-[#ffffff]/20 text-white hover:scale-105 transition-transform duration-300 p-4 backdrop-blur-sm p-4">
                   <CardHeader className="pb-0 pt-6 px-6 text-center">
                     <div className="w-full">
-                    <div className="flex justify-center">
-                      <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="3" y="3" width="18" height="4" rx="1" stroke="white" strokeWidth="2"/>
-                        <rect x="3" y="8" width="18" height="4" rx="1" stroke="white" strokeWidth="2"/>
-                        <rect x="3" y="13" width="18" height="4" rx="1" stroke="white" strokeWidth="2"/>
-                        <rect x="3" y="18" width="18" height="3" rx="1" stroke="white" strokeWidth="2"/>
-                        <path d="M7 5H7.01" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                        <path d="M7 10H7.01" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                        <path d="M7 15H7.01" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                        <path d="M7 19.5H7.01" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                      </svg>
-                    </div>
-                    <h3 className="text-2xl font-bold text-white mt-4">
-                      4-Tier Price Betting
-                    </h3>
+                      <div className="flex justify-center">
+                        <svg
+                          fill="none"
+                          height="60"
+                          viewBox="0 0 24 24"
+                          width="60"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <rect
+                            height="4"
+                            rx="1"
+                            stroke="white"
+                            strokeWidth="2"
+                            width="18"
+                            x="3"
+                            y="3"
+                          />
+                          <rect
+                            height="4"
+                            rx="1"
+                            stroke="white"
+                            strokeWidth="2"
+                            width="18"
+                            x="3"
+                            y="8"
+                          />
+                          <rect
+                            height="4"
+                            rx="1"
+                            stroke="white"
+                            strokeWidth="2"
+                            width="18"
+                            x="3"
+                            y="13"
+                          />
+                          <rect
+                            height="3"
+                            rx="1"
+                            stroke="white"
+                            strokeWidth="2"
+                            width="18"
+                            x="3"
+                            y="18"
+                          />
+                          <path
+                            d="M7 5H7.01"
+                            stroke="white"
+                            strokeLinecap="round"
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M7 10H7.01"
+                            stroke="white"
+                            strokeLinecap="round"
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M7 15H7.01"
+                            stroke="white"
+                            strokeLinecap="round"
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M7 19.5H7.01"
+                            stroke="white"
+                            strokeLinecap="round"
+                            strokeWidth="2"
+                          />
+                        </svg>
+                      </div>
+                      <h3 className="text-2xl font-bold text-white mt-4">
+                        4-Tier Price Betting
+                      </h3>
                     </div>
                   </CardHeader>
                   <CardBody className="px-6 pb-6">
@@ -324,19 +507,55 @@ export default function IndexPage() {
                 <Card className="h-full bg-[#ffffff]/20 text-white hover:scale-105 transition-transform duration-300 p-4 backdrop-blur-sm p-4">
                   <CardHeader className="pb-0 pt-6 px-6 text-center">
                     <div className="w-full">
-                    <div className="flex justify-center">
-                      <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 12S5 4 12 4S23 12 23 12S19 20 12 20S1 12 1 12Z" stroke="white" strokeWidth="2"/>
-                        <circle cx="12" cy="12" r="3" stroke="white" strokeWidth="2"/>
-                        <path d="M12 1V3" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                        <path d="M12 21V23" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                        <path d="M4.22 4.22L5.64 5.64" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                        <path d="M18.36 18.36L19.78 19.78" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                      </svg>
-                    </div>
-                    <h3 className="text-2xl font-bold text-white mt-4">
-                      Commit-Reveal Betting
-                    </h3>
+                      <div className="flex justify-center">
+                        <svg
+                          fill="none"
+                          height="60"
+                          viewBox="0 0 24 24"
+                          width="60"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M1 12S5 4 12 4S23 12 23 12S19 20 12 20S1 12 1 12Z"
+                            stroke="white"
+                            strokeWidth="2"
+                          />
+                          <circle
+                            cx="12"
+                            cy="12"
+                            r="3"
+                            stroke="white"
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M12 1V3"
+                            stroke="white"
+                            strokeLinecap="round"
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M12 21V23"
+                            stroke="white"
+                            strokeLinecap="round"
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M4.22 4.22L5.64 5.64"
+                            stroke="white"
+                            strokeLinecap="round"
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M18.36 18.36L19.78 19.78"
+                            stroke="white"
+                            strokeLinecap="round"
+                            strokeWidth="2"
+                          />
+                        </svg>
+                      </div>
+                      <h3 className="text-2xl font-bold text-white mt-4">
+                        Commit-Reveal Betting
+                      </h3>
                     </div>
                   </CardHeader>
                   <CardBody className="px-6 pb-6">
@@ -389,8 +608,8 @@ export default function IndexPage() {
                               Connect Your Wallet
                             </h3>
                             <p className="text-gray-400">
-                              Connect your Web3 wallet to the Doma testnet to start
-                              bidding.
+                              Connect your Web3 wallet to the Doma testnet to
+                              start bidding.
                             </p>
                           </div>
                         </div>
@@ -399,9 +618,12 @@ export default function IndexPage() {
                             2
                           </Chip>
                           <div>
-                            <h3 className="font-semibold mb-2">Create / Browse Hybrid Batch Auctions</h3>
+                            <h3 className="font-semibold mb-2">
+                              Create / Browse Hybrid Batch Auctions
+                            </h3>
                             <p className="text-gray-400">
-                              Create auctions with your domain portfolios or Explore active batch auctions with real-time price
+                              Create auctions with your domain portfolios or
+                              Explore active batch auctions with real-time price
                               updates.
                             </p>
                           </div>
@@ -411,7 +633,9 @@ export default function IndexPage() {
                             3
                           </Chip>
                           <div>
-                            <h3 className="font-semibold mb-2">Place Smart Bids</h3>
+                            <h3 className="font-semibold mb-2">
+                              Place Smart Bids
+                            </h3>
                             <p className="text-gray-400">
                               Use soft bids for auto-conversion or hard bids for
                               immediate purchase.
@@ -425,8 +649,8 @@ export default function IndexPage() {
                           <div>
                             <h3 className="font-semibold mb-2">Earn Rewards</h3>
                             <p className="text-gray-400">
-                              Get loyalty points and rewards for early participation
-                              in successful auctions.
+                              Get loyalty points and rewards for early
+                              participation in successful auctions.
                             </p>
                           </div>
                         </div>
@@ -439,7 +663,9 @@ export default function IndexPage() {
                       transition={{ duration: 0.5 }}
                       whileInView={{ opacity: 1, x: 0 }}
                     >
-                      <h3 className="text-3xl font-bold mb-4">Hybrid Auction</h3>
+                      <h3 className="text-3xl font-bold mb-4">
+                        Hybrid Auction
+                      </h3>
                       <div className="space-y-3 text-sm">
                         <div className="flex justify-between">
                           <span>Bundle:</span>
@@ -486,8 +712,8 @@ export default function IndexPage() {
                               Connect Your Wallet
                             </h3>
                             <p className="text-gray-400">
-                              Connect your Web3 wallet to the Doma testnet to start
-                              bidding.
+                              Connect your Web3 wallet to the Doma testnet to
+                              start bidding.
                             </p>
                           </div>
                         </div>
@@ -496,10 +722,13 @@ export default function IndexPage() {
                             2
                           </Chip>
                           <div>
-                            <h3 className="font-semibold mb-2">Create / Browse Premium Auctions with Betting</h3>
+                            <h3 className="font-semibold mb-2">
+                              Create / Browse Premium Auctions with Betting
+                            </h3>
                             <p className="text-gray-400">
-                              Create auctions with your premium domain with betting feature or Explore active premium auctions with real-time betting
-                              states.
+                              Create auctions with your premium domain with
+                              betting feature or Explore active premium auctions
+                              with real-time betting states.
                             </p>
                           </div>
                         </div>
@@ -508,9 +737,12 @@ export default function IndexPage() {
                             3
                           </Chip>
                           <div>
-                            <h3 className="font-semibold mb-2">Place Bids / Commit Bet</h3>
+                            <h3 className="font-semibold mb-2">
+                              Place Bids / Commit Bet
+                            </h3>
                             <p className="text-gray-400">
-                              Use bid for immediate purchase or place a bet for winning.
+                              Use bid for immediate purchase or place a bet for
+                              winning.
                             </p>
                           </div>
                         </div>
@@ -534,7 +766,9 @@ export default function IndexPage() {
                       transition={{ duration: 0.5 }}
                       whileInView={{ opacity: 1, x: 0 }}
                     >
-                      <h3 className="text-3xl font-bold mb-4">Premium Auction</h3>
+                      <h3 className="text-3xl font-bold mb-4">
+                        Premium Auction
+                      </h3>
                       <div className="space-y-3 text-sm">
                         <div className="flex justify-between">
                           <span>Domain:</span>
@@ -562,7 +796,6 @@ export default function IndexPage() {
                 </Tab>
               </Tabs>
             </div>
-            
           </div>
         </section>
 
@@ -586,16 +819,16 @@ export default function IndexPage() {
                 className="font-semibold"
                 color="success"
                 href="/hybrid"
-                variant="flat"
                 size="lg"
+                variant="flat"
               >
                 Browse Hybrid Aucions
               </Button>
               <Button
                 as={Link}
                 className="font-semibold"
-                href="/premium"
                 color="primary"
+                href="/premium"
                 size="lg"
                 variant="flat"
               >

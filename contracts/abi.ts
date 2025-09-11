@@ -70,7 +70,7 @@ export const BETTING_ABI = [
       { name: "highPrice", type: "uint256" },
       { name: "lowPrice", type: "uint256" },
       { name: "commitDuration", type: "uint256" },
-      { name: "revealDuration", type: "uint256" }        
+      { name: "revealDuration", type: "uint256" },
     ],
     name: "createAuctionBetting",
     outputs: [{ name: "", type: "uint256" }],

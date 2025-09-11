@@ -13,11 +13,8 @@ export const linkToDomainOnBlockExplorer = (tokenId: string) => {
 };
 
 export const openLinkToDomainExplorer = (tokenId: string) => {
-  window.open(
-    linkToDomainOnBlockExplorer(tokenId),
-    "_blank",
-  )
-}
+  window.open(linkToDomainOnBlockExplorer(tokenId), "_blank");
+};
 
 export const timeLeft = (endTime: number) => {
   const remaining = endTime - Math.floor(Date.now() / 1000);

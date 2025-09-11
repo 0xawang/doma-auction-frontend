@@ -18,17 +18,19 @@ import { Logo } from "@/components/icons";
 import { WalletConnect } from "@/components/wallet-connect";
 
 export const Navbar = () => {
-  const router = useRouter()
+  const router = useRouter();
+
   return (
     <HeroUINavbar className="h-32" maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
             <Logo />
-            <p className="font-bold text-main text-inherit">Doma Hybrid Auction</p>
+            <p className="font-bold text-main text-inherit">
+              Doma Hybrid Auction
+            </p>
           </NextLink>
         </NavbarBrand>
-
       </NavbarContent>
 
       <NavbarContent className="hidden lg:flex gap-4" justify="center">
@@ -38,7 +40,7 @@ export const Navbar = () => {
               className={clsx(
                 linkStyles({ color: "foreground" }),
                 "data-[active=true]:text-main data-[active=true]:font-medium",
-                router.pathname === item.href ? "text-main font-medium" : ""
+                router.pathname === item.href ? "text-main font-medium" : "",
               )}
               color="foreground"
               href={item.href}

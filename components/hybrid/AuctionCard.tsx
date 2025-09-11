@@ -3,12 +3,12 @@ import { Button } from "@heroui/button";
 import { Chip } from "@heroui/chip";
 import { Link } from "@heroui/link";
 import { motion } from "framer-motion";
+import { useSwitchChain } from "wagmi";
+import { useRouter } from "next/router";
 
 import { linkToBlockExplorer, shortenAddress } from "@/utils/token";
 import { useWeb3 } from "@/hooks/useWeb3";
 import { DOMA_CHAINID } from "@/config/web3";
-import { useSwitchChain } from "wagmi";
-import { useRouter } from "next/router";
 
 interface AuctionCardProps {
   auction: any;
@@ -111,7 +111,11 @@ export function AuctionCard({ auction, index }: AuctionCardProps) {
               variant={isConnected ? "solid" : "bordered"}
               onPress={handleViewAuction}
             >
-              {isConnected ? chain?.id == DOMA_CHAINID ? "View & Bid" : "Switch to Doma Network" : "Connect Wallet to Bid"}
+              {isConnected
+                ? chain?.id == DOMA_CHAINID
+                  ? "View & Bid"
+                  : "Switch to Doma Network"
+                : "Connect Wallet to Bid"}
             </Button>
           </div>
         </CardBody>

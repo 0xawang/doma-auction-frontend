@@ -53,12 +53,7 @@ export default function AuctionsPage() {
                 Connect wallet to participate
               </Chip>
             )}
-            <Button
-              as={Link}
-              color="primary"
-              href="/hybrid/create"
-              size="lg"
-            >
+            <Button as={Link} color="primary" href="/hybrid/create" size="lg">
               Create Hybrid Auction
             </Button>
           </div>
