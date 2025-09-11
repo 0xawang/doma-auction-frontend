@@ -17,18 +17,6 @@ export default function IndexPage() {
   };
 
   return (
-    <div className="relative">
-      {/* Background Image */}
-      <div className="fixed inset-0 z-0 h-screen">
-        <img
-          alt="Domain Auction Background"
-          className="w-full h-full object-cover"
-          src="/images/domain-auction.jpg"
-        />
-        <div className="absolute inset-0 backdrop-blur-[1px]" />
-        <div className="absolute inset-0 bg-black/40" />
-      </div>
-
       <DefaultLayout>
         {/* Hero Section */}
         <section className="relative z-10 flex flex-col bg-black/2 items-center justify-center gap-4 py-12 md:py-24">
@@ -838,6 +826,5 @@ export default function IndexPage() {
           </motion.div>
         </section>
       </DefaultLayout>
-    </div>
   );
 }
