@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { CONTRACT_ADDRESSES } from "@/config/web3";
 import { AUCTION_ABI } from "@/contracts/abi";
-import { Auction } from "@/types/auction";
+import { Auction, DomainInfo } from "@/types/auction";
 import { timeLeft } from "@/utils/token";
 
 const AUCTION_CONTRACT_ADDRESS =
@@ -230,6 +230,7 @@ export function useAuctionsData(auctionCount: number) {
 }
 
 export function useDomainMetadata(tokenIds: string[] | undefined) {
+  
   const domainQueries = useQuery({
     queryKey: ["domainInfo", tokenIds?.join(",")],
     queryFn: async () => {
@@ -247,8 +248,7 @@ export function useDomainMetadata(tokenIds: string[] | undefined) {
 
         if (response.ok) {
           const { domainInfos } = await response.json();
-
-          return domainInfos;
+          return domainInfos as DomainInfo[];
         }
       } catch (error) {
         console.error("Error fetching domain metadata:", error);

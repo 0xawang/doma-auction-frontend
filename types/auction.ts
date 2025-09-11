@@ -21,6 +21,23 @@ export interface Auction {
   filled: number;
 }
 
+export interface PremiumAuction {
+  id: number;
+  seller: string;
+  tokenId: bigint;
+  startPrice: bigint;
+  reservePrice: bigint;
+  priceDecrement: bigint;
+  startedAt: number;
+  endedAt: number;
+  highPrice: bigint;
+  lowPrice: bigint;
+  active: boolean;
+  cleared: boolean;
+  winner: string;
+  finalPrice: bigint;
+}
+
 export interface DomainInfo {
   id: string;
   name: string;

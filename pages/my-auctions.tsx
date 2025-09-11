@@ -20,7 +20,7 @@ import DefaultLayout from "@/layouts/default";
 import { useWeb3 } from "@/hooks/useWeb3";
 import { Image } from "@heroui/react";
 import NextImage from "next/image";
-import { NotConnected } from "@/components/create/NotConnected";
+import { NotConnected } from "@/components/hybrid/create/NotConnected";
 import { useWalletModal } from "@/contexts/WalletContext";
 
 interface UserAuction {

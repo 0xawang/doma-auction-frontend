@@ -149,7 +149,7 @@ export default function CreateAuctionPage() {
           : 0,
         royaltyIncrement: formData.enableRoyalty
           ? formData.royaltyIncrement
-          : 0,
+          : 0
       });
 
       toast.success("Auction created successfully!");

@@ -8,16 +8,16 @@ import { Image } from "@heroui/react";
 
 import { title } from "@/components/primitives";
 import DefaultLayout from "@/layouts/default";
+import { usePremiumAuctions } from "@/hooks/usePremiumAuctions";
 import { useWeb3 } from "@/hooks/useWeb3";
+import { PremiumAuctionCard } from "@/components/premium/PremiumAuctionCard";
 
 export default function PremiumAuctionsPage() {
   const { isConnected } = useWeb3();
+  const { auctionCounter, auctions, domainInfos, isLoading } = usePremiumAuctions();
   const [filter, setFilter] = useState("all");
   const [sortBy, setSortBy] = useState("timeLeft");
   const [searchTerm, setSearchTerm] = useState("");
-
-  // Mock data for premium auctions
-  const premiumAuctions = [];
 
   return (
     <DefaultLayout>
@@ -28,7 +28,9 @@ export default function PremiumAuctionsPage() {
               Premium Domain Auctions
             </h1>
             <p className="text-gray-600 mt-2">
-              Single premium domain auctions with 4-tier betting system
+              {auctionCounter > 0
+                ? `${auctionCounter} premium auctions created`
+                : "Browse single domain auctions with 4-tier betting system"}
             </p>
           </div>
 
@@ -53,7 +55,7 @@ export default function PremiumAuctionsPage() {
         <div className="flex flex-col md:flex-row gap-4 mb-8">
           <Input
             className="md:w-80"
-            placeholder="Search by domain name..."
+            placeholder="Search by seller address..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -69,7 +71,7 @@ export default function PremiumAuctionsPage() {
           >
             <SelectItem key="all">All Auctions</SelectItem>
             <SelectItem key="active">Active Only</SelectItem>
-            <SelectItem key="betting">With Betting</SelectItem>
+            <SelectItem key="cleared">Cleared</SelectItem>
           </Select>
 
           <Select
@@ -83,28 +85,45 @@ export default function PremiumAuctionsPage() {
           >
             <SelectItem key="timeLeft">Time Left</SelectItem>
             <SelectItem key="price">Current Price</SelectItem>
-            <SelectItem key="bets">Total Bets</SelectItem>
+            <SelectItem key="betting">Betting Pool</SelectItem>
           </Select>
         </div>
 
-        {/* Empty State */}
-        <div className="text-center py-12">
-          <h3 className="text-xl font-semibold mb-2">No premium auctions found</h3>
-          <div className="flex justify-center mb-4">
-            <Image
-              alt="No auctions"
-              height={150}
-              src="/images/auction.png"
-              width={200}
-            />
-          </div>
-          <p className="text-gray-600 mb-4">
-            Be the first to create a premium domain auction with betting.
-          </p>
-          <Button as={Link} color="primary" href="/premium/create">
-            Create First Premium Auction
-          </Button>
+        {/* Auctions Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {isLoading && (
+            <div className="col-span-full text-center py-8">
+              <p>Loading auctions...</p>
+            </div>
+          )}
+          {auctions.filter(auction => !!auction).map((auction, index) => (
+            <PremiumAuctionCard 
+              key={index} 
+              auction={auction} 
+              domainInfo={domainInfos?.find(d => d.id === auction.tokenId.toString())}
+              index={index} />
+          ))}
         </div>
+
+        {auctionCounter === 0 && !isLoading && (
+          <div className="text-center py-12">
+            <h3 className="text-xl font-semibold mb-2">No auctions found</h3>
+            <div className="flex justify-center mb-4">
+              <Image
+                alt="No auctions"
+                height={150}
+                src="/images/auction.png"
+                width={200}
+              />
+            </div>
+            <p className="text-gray-600 mb-4">
+              Be the first to create a premium domain auction with betting.
+            </p>
+            <Button as={Link} color="primary" href="/premium/create">
+              Create First Premium Auction
+            </Button>
+          </div>
+        )}
       </div>
     </DefaultLayout>
   );

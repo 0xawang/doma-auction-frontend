@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, useDisclosure } from "@heroui/react";
 import { useSwitchChain, useWriteContract, useReadContract } from "wagmi";
 import {type ZonedDateTime} from "@internationalized/date";
@@ -10,6 +10,7 @@ import { useWeb3 } from "@/hooks/useWeb3";
 import { ERC721_ABI } from "@/contracts/abi";
 import { DOMA_CHAINID, CONTRACT_ADDRESSES } from "@/config/web3";
 import { useOwnershipToken } from "@/hooks/useOwnershipToken";
+import { useBetting } from "@/hooks/useBetting";
 import DefaultLayout from "@/layouts/default";
 import { NotConnected } from "@/components/hybrid/create/NotConnected";
 import { useWalletModal } from "@/contexts/WalletContext";
@@ -17,8 +18,9 @@ import { DomainSelectionCard } from "@/components/premium/DomainSelectionCard";
 import { AuctionSettingsCard } from "@/components/premium/AuctionSettingsCard";
 import { BettingSettingsCard } from "@/components/premium/BettingSettingsCard";
 import { ReviewModal } from "@/components/premium/ReviewModal";
+import { formatEther, parseEther } from "viem";
 
-const PREMIUM_AUCTION_ADDRESS = CONTRACT_ADDRESSES.DOMAIN_AUCTION_BETTING as `0x${string}`;
+const PREMIUM_AUCTION_ADDRESS = CONTRACT_ADDRESSES.AUCTION_BETTING as `0x${string}`;
 
 const defaultParam = {
   tokenId: "",
@@ -40,6 +42,7 @@ export default function CreatePremiumAuctionPage() {
   const { switchChain } = useSwitchChain();
   const { writeContractAsync } = useWriteContract();
   const { openConnectModal } = useWalletModal();
+  const { createAuctionBetting, isConfirming, isSuccess } = useBetting();
 
   const [isApproving, setIsApproving] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
@@ -138,8 +141,17 @@ export default function CreatePremiumAuctionPage() {
   const handleCreateAuction = async () => {
     setIsCreating(true);
     try {
-      // Mock auction creation - replace with actual contract call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await createAuctionBetting(
+        BigInt(formData.tokenId),
+        parseEther(formData.startPrice),
+        parseEther(formData.reservePrice),
+        parseEther(formData.priceDecrement),
+        parseInt(formData.duration) * 3600,
+        parseEther(formData.highPrice),
+        parseEther(formData.lowPrice),
+        parseInt(formData.commitDuration) * 3600,
+        parseInt(formData.revealDuration) * 3600
+      );
       
       toast.success("Premium auction created successfully!");
       
@@ -152,6 +164,18 @@ export default function CreatePremiumAuctionPage() {
       setIsCreating(false);
     }
   };
+
+  useEffect(() => {
+    if (isConfirming) {
+      toast.success("Confirming premium auction transaction!");
+    }
+  }, [isConfirming])
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Created premium auction successfully!");
+    }
+  }, [isSuccess])
 
   const selectedToken = ownedTokens.find(token => token.tokenId.toString() === formData.tokenId.toString());
 
